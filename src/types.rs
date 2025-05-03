@@ -218,10 +218,6 @@ impl Decode for NasAccessType {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Access type
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -1056,10 +1052,6 @@ impl Decode for NasConfigurationUpdateIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Configuration update indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -1666,10 +1658,6 @@ impl Decode for NasImeisvRequest {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for IMEISV request
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -1917,10 +1905,6 @@ impl Decode for NasMicoIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for MICO indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -1961,10 +1945,6 @@ impl Decode for NasMaPduSessionInformation {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for MA PDU session information
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -2302,10 +2282,6 @@ impl Decode for NasNetworkSlicingIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Network slicing indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -2346,10 +2322,6 @@ impl Decode for NasNon3GppNwProvidedPolicies {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Non-3GPP NW provided policies
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -2444,10 +2416,6 @@ impl Decode for NasNssaiInclusionMode {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for NSSAI inclusion mode
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -3005,10 +2973,6 @@ impl Decode for NasReleaseAssistanceIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Release assistance indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -3049,10 +3013,6 @@ impl Decode for NasRequestType {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Request type
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -3309,10 +3269,6 @@ impl Decode for NasSmsIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for SMS indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -3872,10 +3828,6 @@ impl Decode for NasUeRadioCapabilityIdDeletionIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for UE radio capability ID deletion indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -4063,10 +4015,6 @@ impl Decode for NasNFGcIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for N5GC indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -4161,10 +4109,6 @@ impl Decode for NasAdditionalConfigurationIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Additional configuration indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -4966,10 +4910,6 @@ impl Decode for NasPriorityIndicator {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Priority indicator
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -5172,10 +5112,6 @@ impl Decode for NasPduSessionType {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for PDU session type
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -5428,10 +5364,6 @@ impl Decode for NasSscMode {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for SSC mode
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -5789,10 +5721,6 @@ impl Decode for NasControlPlaneOnlyIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Control plane only indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -6160,10 +6088,6 @@ impl Decode for NasAlwaysOnPduSessionIndication {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Always-on PDU session indication
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -6426,10 +6350,6 @@ impl Decode for NasAlwaysOnPduSessionRequested {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Always-on PDU session requested
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
@@ -6470,10 +6390,6 @@ impl Decode for NasAllowedSscMode {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         // Custom decoding for Allowed SSC mode
         // Format: TV, Length: 1
-        if buffer.remaining() < 2 {
-            debug_assert!(false, "wanted 2");
-            return Err(NasError::BufferTooShort);
-        }
         let byte = buffer.get_u8();
         let type_field = byte >> 4;
         let value = byte & 0x0F;
