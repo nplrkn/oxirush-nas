@@ -1,25 +1,25 @@
 /*
-    OxiRush
-    Copyright 2025 Valentin D'Emmanuele
+   OxiRush
+   Copyright 2025 Valentin D'Emmanuele
 
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+   http://www.apache.org/licenses/LICENSE-2.0
 
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
- */
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 
-use crate::types::*;
 use crate::message_types::*;
+use crate::types::helpers;
+use crate::types::*;
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use std::convert::TryFrom;
-use crate::types::helpers;
 
 /// PDU Session Identity value for unassigned
 pub const PDU_SESSION_IDENTITY_UNASSIGNED: u8 = 0;
@@ -56,13 +56,13 @@ impl Decode for Nas5gmmHeader {
         if buffer.remaining() < 3 {
             return Err(NasError::BufferTooShort);
         }
-        
+
         let extended_protocol_discriminator = buffer.get_u8();
         let security_header_type = buffer.get_u8();
         let message_type_value = buffer.get_u8();
-        
+
         let message_type = Nas5gmmMessageType::try_from(message_type_value)?;
-        
+
         Ok(Self {
             extended_protocol_discriminator,
             security_header_type,
@@ -81,7 +81,11 @@ pub struct Nas5gsmHeader {
 }
 
 impl Nas5gsmHeader {
-    pub fn new(message_type: Nas5gsmMessageType, pdu_session_identity: u8, procedure_transaction_identity: u8) -> Self {
+    pub fn new(
+        message_type: Nas5gsmMessageType,
+        pdu_session_identity: u8,
+        procedure_transaction_identity: u8,
+    ) -> Self {
         Self {
             extended_protocol_discriminator: EXTENDED_PROTOCOL_DISCRIMINATOR_5GSM,
             pdu_session_identity,
@@ -106,14 +110,14 @@ impl Decode for Nas5gsmHeader {
         if buffer.remaining() < 4 {
             return Err(NasError::BufferTooShort);
         }
-        
+
         let extended_protocol_discriminator = buffer.get_u8();
         let pdu_session_identity = buffer.get_u8();
         let procedure_transaction_identity = buffer.get_u8();
         let message_type_value = buffer.get_u8();
-        
+
         let message_type = Nas5gsmMessageType::try_from(message_type_value)?;
-        
+
         Ok(Self {
             extended_protocol_discriminator,
             pdu_session_identity,
@@ -147,14 +151,14 @@ impl Decode for Nas5gsSecurityHeader {
         if buffer.remaining() < 7 {
             return Err(NasError::BufferTooShort);
         }
-        
+
         let extended_protocol_discriminator = buffer.get_u8();
         let security_header_type_value = buffer.get_u8();
         let message_authentication_code = buffer.get_u32();
         let sequence_number = buffer.get_u8();
-        
+
         let security_header_type = Nas5gsSecurityHeaderType::try_from(security_header_type_value)?;
-        
+
         Ok(Self {
             extended_protocol_discriminator,
             security_header_type,
@@ -263,7 +267,10 @@ impl NasRegistrationRequest {
         }
     }
 
-    pub fn set_non_current_native_nas_key_set_identifier(mut self, value: NasKeySetIdentifier) -> Self {
+    pub fn set_non_current_native_nas_key_set_identifier(
+        mut self,
+        value: NasKeySetIdentifier,
+    ) -> Self {
         self.non_current_native_nas_key_set_identifier = Some(value);
         self
     }
@@ -383,7 +390,10 @@ impl NasRegistrationRequest {
         self
     }
 
-    pub fn set_requested_extended_drx_parameters(mut self, value: NasExtendedDrxParameters) -> Self {
+    pub fn set_requested_extended_drx_parameters(
+        mut self,
+        value: NasExtendedDrxParameters,
+    ) -> Self {
         self.requested_extended_drx_parameters = Some(value);
         self
     }
@@ -403,12 +413,18 @@ impl NasRegistrationRequest {
         self
     }
 
-    pub fn set_additional_information_requested(mut self, value: NasAdditionalInformationRequested) -> Self {
+    pub fn set_additional_information_requested(
+        mut self,
+        value: NasAdditionalInformationRequested,
+    ) -> Self {
         self.additional_information_requested = Some(value);
         self
     }
 
-    pub fn set_requested_wus_assistance_information(mut self, value: NasWusAssistanceInformation) -> Self {
+    pub fn set_requested_wus_assistance_information(
+        mut self,
+        value: NasWusAssistanceInformation,
+    ) -> Self {
         self.requested_wus_assistance_information = Some(value);
         self
     }
@@ -418,7 +434,10 @@ impl NasRegistrationRequest {
         self
     }
 
-    pub fn set_requested_nb_n1_mode_drx_parameters(mut self, value: NasNbN1ModeDrxParameters) -> Self {
+    pub fn set_requested_nb_n1_mode_drx_parameters(
+        mut self,
+        value: NasNbN1ModeDrxParameters,
+    ) -> Self {
         self.requested_nb_n1_mode_drx_parameters = Some(value);
         self
     }
@@ -443,12 +462,18 @@ impl NasRegistrationRequest {
         self
     }
 
-    pub fn set_ms_determined_plmn_with_disaster_condition(mut self, value: NasPlmnIdentity) -> Self {
+    pub fn set_ms_determined_plmn_with_disaster_condition(
+        mut self,
+        value: NasPlmnIdentity,
+    ) -> Self {
         self.ms_determined_plmn_with_disaster_condition = Some(value);
         self
     }
 
-    pub fn set_requested_peips_assistance_information(mut self, value: NasPeipsAssistanceInformation) -> Self {
+    pub fn set_requested_peips_assistance_information(
+        mut self,
+        value: NasPeipsAssistanceInformation,
+    ) -> Self {
         self.requested_peips_assistance_information = Some(value);
         self
     }
@@ -662,10 +687,7 @@ impl Decode for NasRegistrationRequest {
         let fgs_registration_type = NasFGsRegistrationType::decode(buffer)?;
         let fgs_mobile_identity = NasFGsMobileIdentity::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgs_registration_type,
-            fgs_mobile_identity,
-        );
+        let mut message = Self::new(fgs_registration_type, fgs_mobile_identity);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -679,130 +701,145 @@ impl Decode for NasRegistrationRequest {
             match iei {
                 0xC0 => {
                     buffer.advance(1); // Skip IEI
-                    message.non_current_native_nas_key_set_identifier = Some(NasKeySetIdentifier::decode(buffer)?);
-                },
+                    message.non_current_native_nas_key_set_identifier =
+                        Some(NasKeySetIdentifier::decode(buffer)?);
+                }
                 0x10 => {
                     message.fgmm_capability = Some(NasFGmmCapability::decode(buffer)?);
-                },
+                }
                 0x2E => {
                     buffer.advance(1); // Skip IEI
                     message.ue_security_capability = Some(NasUeSecurityCapability::decode(buffer)?);
-                },
+                }
                 0x2F => {
                     message.requested_nssai = Some(NasNssai::decode(buffer)?);
-                },
+                }
                 0x52 => {
-                    message.last_visited_registered_tai = Some(NasFGsTrackingAreaIdentity::decode(buffer)?);
-                },
+                    message.last_visited_registered_tai =
+                        Some(NasFGsTrackingAreaIdentity::decode(buffer)?);
+                }
                 0x17 => {
-                    message.s1_ue_network_capability = Some(NasS1UeNetworkCapability::decode(buffer)?);
-                },
+                    message.s1_ue_network_capability =
+                        Some(NasS1UeNetworkCapability::decode(buffer)?);
+                }
                 0x40 => {
                     message.uplink_data_status = Some(NasUplinkDataStatus::decode(buffer)?);
-                },
+                }
                 0x50 => {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
-                },
+                }
                 0xB0 => {
                     message.mico_indication = Some(NasMicoIndication::decode(buffer)?);
-                },
+                }
                 0x2B => {
                     message.ue_status = Some(NasUeStatus::decode(buffer)?);
-                },
+                }
                 0x77 => {
                     buffer.advance(1); // Skip IEI
                     message.additional_guti = Some(NasFGsMobileIdentity::decode(buffer)?);
-                },
+                }
                 0x25 => {
-                    message.allowed_pdu_session_status = Some(NasAllowedPduSessionStatus::decode(buffer)?);
-                },
+                    message.allowed_pdu_session_status =
+                        Some(NasAllowedPduSessionStatus::decode(buffer)?);
+                }
                 0x18 => {
                     message.ue_usage_setting = Some(NasUeUsageSetting::decode(buffer)?);
-                },
+                }
                 0x51 => {
                     message.requested_drx_parameters = Some(NasFGsDrxParameters::decode(buffer)?);
-                },
+                }
                 0x70 => {
-                    message.eps_nas_message_container = Some(NasEpsNasMessageContainer::decode(buffer)?);
-                },
+                    message.eps_nas_message_container =
+                        Some(NasEpsNasMessageContainer::decode(buffer)?);
+                }
                 0x74 => {
                     message.ladn_indication = Some(NasLadnIndication::decode(buffer)?);
-                },
+                }
                 0x80 => {
                     buffer.advance(1); // Skip IEI
                     message.payload_container_type = Some(NasPayloadContainerType::decode(buffer)?);
-                },
+                }
                 0x7B => {
                     buffer.advance(1); // Skip IEI
                     message.payload_container = Some(NasPayloadContainer::decode(buffer)?);
-                },
+                }
                 0x90 => {
-                    message.network_slicing_indication = Some(NasNetworkSlicingIndication::decode(buffer)?);
-                },
+                    message.network_slicing_indication =
+                        Some(NasNetworkSlicingIndication::decode(buffer)?);
+                }
                 0x53 => {
                     message.fgs_update_type = Some(NasFGsUpdateType::decode(buffer)?);
-                },
+                }
                 0x41 => {
-                    message.mobile_station_classmark_2 = Some(NasMobileStationClassmark2::decode(buffer)?);
-                },
+                    message.mobile_station_classmark_2 =
+                        Some(NasMobileStationClassmark2::decode(buffer)?);
+                }
                 0x42 => {
                     message.supported_codecs = Some(NasSupportedCodecList::decode(buffer)?);
-                },
+                }
                 0x71 => {
                     message.nas_message_container = Some(NasMessageContainer::decode(buffer)?);
-                },
+                }
                 0x60 => {
-                    message.eps_bearer_context_status = Some(NasEpsBearerContextStatus::decode(buffer)?);
-                },
+                    message.eps_bearer_context_status =
+                        Some(NasEpsBearerContextStatus::decode(buffer)?);
+                }
                 0x6E => {
-                    message.requested_extended_drx_parameters = Some(NasExtendedDrxParameters::decode(buffer)?);
-                },
+                    message.requested_extended_drx_parameters =
+                        Some(NasExtendedDrxParameters::decode(buffer)?);
+                }
                 0x6A => {
                     message.t3324_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x67 => {
                     message.ue_radio_capability_id = Some(NasUeRadioCapabilityId::decode(buffer)?);
-                },
+                }
                 0x35 => {
                     message.requested_mapped_nssai = Some(NasMappedNssai::decode(buffer)?);
-                },
+                }
                 0x48 => {
-                    message.additional_information_requested = Some(NasAdditionalInformationRequested::decode(buffer)?);
-                },
+                    message.additional_information_requested =
+                        Some(NasAdditionalInformationRequested::decode(buffer)?);
+                }
                 0x1A => {
-                    message.requested_wus_assistance_information = Some(NasWusAssistanceInformation::decode(buffer)?);
-                },
+                    message.requested_wus_assistance_information =
+                        Some(NasWusAssistanceInformation::decode(buffer)?);
+                }
                 0xA0 => {
                     message.nfgc_indication = Some(NasNFGcIndication::decode(buffer)?);
-                },
+                }
                 0x30 => {
-                    message.requested_nb_n1_mode_drx_parameters = Some(NasNbN1ModeDrxParameters::decode(buffer)?);
-                },
+                    message.requested_nb_n1_mode_drx_parameters =
+                        Some(NasNbN1ModeDrxParameters::decode(buffer)?);
+                }
                 0x29 => {
                     message.ue_request_type = Some(NasUeRequestType::decode(buffer)?);
-                },
+                }
                 0x28 => {
                     message.paging_restriction = Some(NasPagingRestriction::decode(buffer)?);
-                },
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
                 0x32 => {
                     message.nid = Some(NasNid::decode(buffer)?);
-                },
+                }
                 0x16 => {
-                    message.ms_determined_plmn_with_disaster_condition = Some(NasPlmnIdentity::decode(buffer)?);
-                },
+                    message.ms_determined_plmn_with_disaster_condition =
+                        Some(NasPlmnIdentity::decode(buffer)?);
+                }
                 0x2A => {
-                    message.requested_peips_assistance_information = Some(NasPeipsAssistanceInformation::decode(buffer)?);
-                },
+                    message.requested_peips_assistance_information =
+                        Some(NasPeipsAssistanceInformation::decode(buffer)?);
+                }
                 0x3B => {
                     message.requested_t3512_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -826,7 +863,8 @@ pub struct NasRegistrationAccept {
     pub fgs_network_feature_support: Option<NasFGsNetworkFeatureSupport>,
     pub pdu_session_status: Option<NasPduSessionStatus>,
     pub pdu_session_reactivation_result: Option<NasPduSessionReactivationResult>,
-    pub pdu_session_reactivation_result_error_cause: Option<NasPduSessionReactivationResultErrorCause>,
+    pub pdu_session_reactivation_result_error_cause:
+        Option<NasPduSessionReactivationResultErrorCause>,
     pub ladn_information: Option<NasLadnInformation>,
     pub mico_indication: Option<NasMicoIndication>,
     pub network_slicing_indication: Option<NasNetworkSlicingIndication>,
@@ -839,7 +877,8 @@ pub struct NasRegistrationAccept {
     pub sor_transparent_container: Option<NasSorTransparentContainer>,
     pub eap_message: Option<NasEapMessage>,
     pub nssai_inclusion_mode: Option<NasNssaiInclusionMode>,
-    pub operator_defined_access_category_definitions: Option<NasOperatorDefinedAccessCategoryDefinitions>,
+    pub operator_defined_access_category_definitions:
+        Option<NasOperatorDefinedAccessCategoryDefinitions>,
     pub negotiated_drx_parameters: Option<NasFGsDrxParameters>,
     pub non_3gpp_nw_policies: Option<NasNon3GppNwProvidedPolicies>,
     pub eps_bearer_context_status: Option<NasEpsBearerContextStatus>,
@@ -848,7 +887,8 @@ pub struct NasRegistrationAccept {
     pub t3448_value: Option<NasGprsTimer2>,
     pub t3324_value: Option<NasGprsTimer3>,
     pub ue_radio_capability_id: Option<NasUeRadioCapabilityId>,
-    pub ue_radio_capability_id_deletion_indication: Option<NasUeRadioCapabilityIdDeletionIndication>,
+    pub ue_radio_capability_id_deletion_indication:
+        Option<NasUeRadioCapabilityIdDeletionIndication>,
     pub pending_nssai: Option<NasNssai>,
     pub ciphering_key_data: Option<NasCipheringKeyData>,
     pub cag_information_list: Option<NasCagInformationList>,
@@ -862,17 +902,18 @@ pub struct NasRegistrationAccept {
     pub nssrg_information: Option<NasNssrgInformation>,
     pub disaster_roaming_wait_range: Option<NasRegistrationWaitRange>,
     pub disaster_return_wait_range: Option<NasRegistrationWaitRange>,
-    pub list_of_plmns_to_be_used_in_disaster_condition: Option<NasListOfPlmnsToBeUsedInDisasterCondition>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming: Option<NasFGsTrackingAreaIdentityList>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service: Option<NasFGsTrackingAreaIdentityList>,
+    pub list_of_plmns_to_be_used_in_disaster_condition:
+        Option<NasListOfPlmnsToBeUsedInDisasterCondition>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming:
+        Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service:
+        Option<NasFGsTrackingAreaIdentityList>,
     pub extended_cag_information_list: Option<NasExtendedCagInformationList>,
     pub nsag_information: Option<NasNsagInformation>,
 }
 
 impl NasRegistrationAccept {
-    pub fn new(
-        fgs_registration_result: NasFGsRegistrationResult,
-    ) -> Self {
+    pub fn new(fgs_registration_result: NasFGsRegistrationResult) -> Self {
         Self {
             fgs_registration_result,
             fg_guti: None,
@@ -968,12 +1009,18 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_pdu_session_reactivation_result(mut self, value: NasPduSessionReactivationResult) -> Self {
+    pub fn set_pdu_session_reactivation_result(
+        mut self,
+        value: NasPduSessionReactivationResult,
+    ) -> Self {
         self.pdu_session_reactivation_result = Some(value);
         self
     }
 
-    pub fn set_pdu_session_reactivation_result_error_cause(mut self, value: NasPduSessionReactivationResultErrorCause) -> Self {
+    pub fn set_pdu_session_reactivation_result_error_cause(
+        mut self,
+        value: NasPduSessionReactivationResultErrorCause,
+    ) -> Self {
         self.pdu_session_reactivation_result_error_cause = Some(value);
         self
     }
@@ -1018,7 +1065,10 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_extended_emergency_number_list(mut self, value: NasExtendedEmergencyNumberList) -> Self {
+    pub fn set_extended_emergency_number_list(
+        mut self,
+        value: NasExtendedEmergencyNumberList,
+    ) -> Self {
         self.extended_emergency_number_list = Some(value);
         self
     }
@@ -1038,7 +1088,10 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_operator_defined_access_category_definitions(mut self, value: NasOperatorDefinedAccessCategoryDefinitions) -> Self {
+    pub fn set_operator_defined_access_category_definitions(
+        mut self,
+        value: NasOperatorDefinedAccessCategoryDefinitions,
+    ) -> Self {
         self.operator_defined_access_category_definitions = Some(value);
         self
     }
@@ -1058,7 +1111,10 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_negotiated_extended_drx_parameters(mut self, value: NasExtendedDrxParameters) -> Self {
+    pub fn set_negotiated_extended_drx_parameters(
+        mut self,
+        value: NasExtendedDrxParameters,
+    ) -> Self {
         self.negotiated_extended_drx_parameters = Some(value);
         self
     }
@@ -1083,7 +1139,10 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_ue_radio_capability_id_deletion_indication(mut self, value: NasUeRadioCapabilityIdDeletionIndication) -> Self {
+    pub fn set_ue_radio_capability_id_deletion_indication(
+        mut self,
+        value: NasUeRadioCapabilityIdDeletionIndication,
+    ) -> Self {
         self.ue_radio_capability_id_deletion_indication = Some(value);
         self
     }
@@ -1103,17 +1162,26 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_truncated_fg_s_tmsi_configuration(mut self, value: NasTruncatedFGSTmsiConfiguration) -> Self {
+    pub fn set_truncated_fg_s_tmsi_configuration(
+        mut self,
+        value: NasTruncatedFGSTmsiConfiguration,
+    ) -> Self {
         self.truncated_fg_s_tmsi_configuration = Some(value);
         self
     }
 
-    pub fn set_negotiated_wus_assistance_information(mut self, value: NasWusAssistanceInformation) -> Self {
+    pub fn set_negotiated_wus_assistance_information(
+        mut self,
+        value: NasWusAssistanceInformation,
+    ) -> Self {
         self.negotiated_wus_assistance_information = Some(value);
         self
     }
 
-    pub fn set_negotiated_nb_n1_mode_drx_parameters(mut self, value: NasNbN1ModeDrxParameters) -> Self {
+    pub fn set_negotiated_nb_n1_mode_drx_parameters(
+        mut self,
+        value: NasNbN1ModeDrxParameters,
+    ) -> Self {
         self.negotiated_nb_n1_mode_drx_parameters = Some(value);
         self
     }
@@ -1128,12 +1196,18 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_negotiated_peips_assistance_information(mut self, value: NasPeipsAssistanceInformation) -> Self {
+    pub fn set_negotiated_peips_assistance_information(
+        mut self,
+        value: NasPeipsAssistanceInformation,
+    ) -> Self {
         self.negotiated_peips_assistance_information = Some(value);
         self
     }
 
-    pub fn set_fgs_additional_request_result(mut self, value: NasFGsAdditionalRequestResult) -> Self {
+    pub fn set_fgs_additional_request_result(
+        mut self,
+        value: NasFGsAdditionalRequestResult,
+    ) -> Self {
         self.fgs_additional_request_result = Some(value);
         self
     }
@@ -1153,22 +1227,34 @@ impl NasRegistrationAccept {
         self
     }
 
-    pub fn set_list_of_plmns_to_be_used_in_disaster_condition(mut self, value: NasListOfPlmnsToBeUsedInDisasterCondition) -> Self {
+    pub fn set_list_of_plmns_to_be_used_in_disaster_condition(
+        mut self,
+        value: NasListOfPlmnsToBeUsedInDisasterCondition,
+    ) -> Self {
         self.list_of_plmns_to_be_used_in_disaster_condition = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(value);
         self
     }
 
-    pub fn set_extended_cag_information_list(mut self, value: NasExtendedCagInformationList) -> Self {
+    pub fn set_extended_cag_information_list(
+        mut self,
+        value: NasExtendedCagInformationList,
+    ) -> Self {
         self.extended_cag_information_list = Some(value);
         self
     }
@@ -1411,7 +1497,9 @@ impl Encode for NasRegistrationAccept {
             ie.type_field = 0x13;
             ie.encode(buffer)?;
         }
-        if let Some(ref value) = self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming {
+        if let Some(ref value) =
+            self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming
+        {
             let mut ie = value.clone();
             ie.type_field = 0x1D;
             ie.encode(buffer)?;
@@ -1439,9 +1527,7 @@ impl Decode for NasRegistrationAccept {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgs_registration_result = NasFGsRegistrationResult::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgs_registration_result,
-        );
+        let mut message = Self::new(fgs_registration_result);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -1456,158 +1542,183 @@ impl Decode for NasRegistrationAccept {
                 0x77 => {
                     buffer.advance(1); // Skip IEI
                     message.fg_guti = Some(NasFGsMobileIdentity::decode(buffer)?);
-                },
+                }
                 0x4A => {
                     message.equivalent_plmns = Some(NasPlmnList::decode(buffer)?);
-                },
+                }
                 0x54 => {
                     message.tai_list = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                }
                 0x15 => {
                     message.allowed_nssai = Some(NasNssai::decode(buffer)?);
-                },
+                }
                 0x11 => {
                     message.rejected_nssai = Some(NasRejectedNssai::decode(buffer)?);
-                },
+                }
                 0x31 => {
                     message.configured_nssai = Some(NasNssai::decode(buffer)?);
-                },
+                }
                 0x21 => {
-                    message.fgs_network_feature_support = Some(NasFGsNetworkFeatureSupport::decode(buffer)?);
-                },
+                    message.fgs_network_feature_support =
+                        Some(NasFGsNetworkFeatureSupport::decode(buffer)?);
+                }
                 0x50 => {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
-                },
+                }
                 0x26 => {
-                    message.pdu_session_reactivation_result = Some(NasPduSessionReactivationResult::decode(buffer)?);
-                },
+                    message.pdu_session_reactivation_result =
+                        Some(NasPduSessionReactivationResult::decode(buffer)?);
+                }
                 0x72 => {
-                    message.pdu_session_reactivation_result_error_cause = Some(NasPduSessionReactivationResultErrorCause::decode(buffer)?);
-                },
+                    message.pdu_session_reactivation_result_error_cause =
+                        Some(NasPduSessionReactivationResultErrorCause::decode(buffer)?);
+                }
                 0x79 => {
                     message.ladn_information = Some(NasLadnInformation::decode(buffer)?);
-                },
+                }
                 0xB0 => {
                     message.mico_indication = Some(NasMicoIndication::decode(buffer)?);
-                },
+                }
                 0x90 => {
-                    message.network_slicing_indication = Some(NasNetworkSlicingIndication::decode(buffer)?);
-                },
+                    message.network_slicing_indication =
+                        Some(NasNetworkSlicingIndication::decode(buffer)?);
+                }
                 0x27 => {
                     message.service_area_list = Some(NasServiceAreaList::decode(buffer)?);
-                },
+                }
                 0x5E => {
                     message.t3512_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x5D => {
-                    message.non_3gpp_de_registration_timer_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                    message.non_3gpp_de_registration_timer_value =
+                        Some(NasGprsTimer2::decode(buffer)?);
+                }
                 0x16 => {
                     message.t3502_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x34 => {
                     message.emergency_number_list = Some(NasEmergencyNumberList::decode(buffer)?);
-                },
+                }
                 0x7A => {
-                    message.extended_emergency_number_list = Some(NasExtendedEmergencyNumberList::decode(buffer)?);
-                },
+                    message.extended_emergency_number_list =
+                        Some(NasExtendedEmergencyNumberList::decode(buffer)?);
+                }
                 0x73 => {
-                    message.sor_transparent_container = Some(NasSorTransparentContainer::decode(buffer)?);
-                },
+                    message.sor_transparent_container =
+                        Some(NasSorTransparentContainer::decode(buffer)?);
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0xA0 => {
                     message.nssai_inclusion_mode = Some(NasNssaiInclusionMode::decode(buffer)?);
-                },
+                }
                 0x76 => {
-                    message.operator_defined_access_category_definitions = Some(NasOperatorDefinedAccessCategoryDefinitions::decode(buffer)?);
-                },
+                    message.operator_defined_access_category_definitions =
+                        Some(NasOperatorDefinedAccessCategoryDefinitions::decode(buffer)?);
+                }
                 0x51 => {
                     message.negotiated_drx_parameters = Some(NasFGsDrxParameters::decode(buffer)?);
-                },
+                }
                 0xD0 => {
-                    message.non_3gpp_nw_policies = Some(NasNon3GppNwProvidedPolicies::decode(buffer)?);
-                },
+                    message.non_3gpp_nw_policies =
+                        Some(NasNon3GppNwProvidedPolicies::decode(buffer)?);
+                }
                 0x60 => {
-                    message.eps_bearer_context_status = Some(NasEpsBearerContextStatus::decode(buffer)?);
-                },
+                    message.eps_bearer_context_status =
+                        Some(NasEpsBearerContextStatus::decode(buffer)?);
+                }
                 0x6E => {
-                    message.negotiated_extended_drx_parameters = Some(NasExtendedDrxParameters::decode(buffer)?);
-                },
+                    message.negotiated_extended_drx_parameters =
+                        Some(NasExtendedDrxParameters::decode(buffer)?);
+                }
                 0x6C => {
                     message.t3447_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x6B => {
                     message.t3448_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x6A => {
                     message.t3324_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x67 => {
                     message.ue_radio_capability_id = Some(NasUeRadioCapabilityId::decode(buffer)?);
-                },
+                }
                 0xE0 => {
-                    message.ue_radio_capability_id_deletion_indication = Some(NasUeRadioCapabilityIdDeletionIndication::decode(buffer)?);
-                },
+                    message.ue_radio_capability_id_deletion_indication =
+                        Some(NasUeRadioCapabilityIdDeletionIndication::decode(buffer)?);
+                }
                 0x39 => {
                     message.pending_nssai = Some(NasNssai::decode(buffer)?);
-                },
+                }
                 0x74 => {
                     message.ciphering_key_data = Some(NasCipheringKeyData::decode(buffer)?);
-                },
+                }
                 0x75 => {
                     message.cag_information_list = Some(NasCagInformationList::decode(buffer)?);
-                },
+                }
                 0x1B => {
-                    message.truncated_fg_s_tmsi_configuration = Some(NasTruncatedFGSTmsiConfiguration::decode(buffer)?);
-                },
+                    message.truncated_fg_s_tmsi_configuration =
+                        Some(NasTruncatedFGSTmsiConfiguration::decode(buffer)?);
+                }
                 0x1C => {
-                    message.negotiated_wus_assistance_information = Some(NasWusAssistanceInformation::decode(buffer)?);
-                },
+                    message.negotiated_wus_assistance_information =
+                        Some(NasWusAssistanceInformation::decode(buffer)?);
+                }
                 0x29 => {
-                    message.negotiated_nb_n1_mode_drx_parameters = Some(NasNbN1ModeDrxParameters::decode(buffer)?);
-                },
+                    message.negotiated_nb_n1_mode_drx_parameters =
+                        Some(NasNbN1ModeDrxParameters::decode(buffer)?);
+                }
                 0x68 => {
-                    message.extended_rejected_nssai = Some(NasExtendedRejectedNssai::decode(buffer)?);
-                },
+                    message.extended_rejected_nssai =
+                        Some(NasExtendedRejectedNssai::decode(buffer)?);
+                }
                 0x7B => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
                 0x33 => {
-                    message.negotiated_peips_assistance_information = Some(NasPeipsAssistanceInformation::decode(buffer)?);
-                },
+                    message.negotiated_peips_assistance_information =
+                        Some(NasPeipsAssistanceInformation::decode(buffer)?);
+                }
                 0x34 => {
-                    message.fgs_additional_request_result = Some(NasFGsAdditionalRequestResult::decode(buffer)?);
-                },
+                    message.fgs_additional_request_result =
+                        Some(NasFGsAdditionalRequestResult::decode(buffer)?);
+                }
                 0x70 => {
                     message.nssrg_information = Some(NasNssrgInformation::decode(buffer)?);
-                },
+                }
                 0x14 => {
-                    message.disaster_roaming_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_roaming_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x2C => {
-                    message.disaster_return_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_return_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x13 => {
-                    message.list_of_plmns_to_be_used_in_disaster_condition = Some(NasListOfPlmnsToBeUsedInDisasterCondition::decode(buffer)?);
-                },
+                    message.list_of_plmns_to_be_used_in_disaster_condition =
+                        Some(NasListOfPlmnsToBeUsedInDisasterCondition::decode(buffer)?);
+                }
                 0x1D => {
-                    message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                    message
+                        .forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming =
+                        Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
+                }
                 0x1E => {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                }
                 0x71 => {
-                    message.extended_cag_information_list = Some(NasExtendedCagInformationList::decode(buffer)?);
-                },
+                    message.extended_cag_information_list =
+                        Some(NasExtendedCagInformationList::decode(buffer)?);
+                }
                 0x7C => {
                     message.nsag_information = Some(NasNsagInformation::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -1625,8 +1736,7 @@ pub struct NasRegistrationComplete {
 }
 
 impl NasRegistrationComplete {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             sor_transparent_container: None,
         }
@@ -1651,9 +1761,7 @@ impl Encode for NasRegistrationComplete {
 
 impl Decode for NasRegistrationComplete {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -1666,12 +1774,13 @@ impl Decode for NasRegistrationComplete {
 
             match iei {
                 0x73 => {
-                    message.sor_transparent_container = Some(NasSorTransparentContainer::decode(buffer)?);
-                },
-                _ => {
+                    message.sor_transparent_container =
+                        Some(NasSorTransparentContainer::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -1695,14 +1804,14 @@ pub struct NasRegistrationReject {
     pub disaster_return_wait_range: Option<NasRegistrationWaitRange>,
     pub extended_cag_information_list: Option<NasExtendedCagInformationList>,
     pub lower_bound_timer_value: Option<NasGprsTimer3>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming: Option<NasFGsTrackingAreaIdentityList>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service: Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming:
+        Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service:
+        Option<NasFGsTrackingAreaIdentityList>,
 }
 
 impl NasRegistrationReject {
-    pub fn new(
-        fgmm_cause: NasFGmmCause,
-    ) -> Self {
+    pub fn new(fgmm_cause: NasFGmmCause) -> Self {
         Self {
             fgmm_cause,
             t3346_value: None,
@@ -1754,7 +1863,10 @@ impl NasRegistrationReject {
         self
     }
 
-    pub fn set_extended_cag_information_list(mut self, value: NasExtendedCagInformationList) -> Self {
+    pub fn set_extended_cag_information_list(
+        mut self,
+        value: NasExtendedCagInformationList,
+    ) -> Self {
         self.extended_cag_information_list = Some(value);
         self
     }
@@ -1764,12 +1876,18 @@ impl NasRegistrationReject {
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(value);
         self
     }
@@ -1823,7 +1941,9 @@ impl Encode for NasRegistrationReject {
             ie.type_field = 0x3A;
             ie.encode(buffer)?;
         }
-        if let Some(ref value) = self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming {
+        if let Some(ref value) =
+            self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming
+        {
             let mut ie = value.clone();
             ie.type_field = 0x1D;
             ie.encode(buffer)?;
@@ -1841,9 +1961,7 @@ impl Decode for NasRegistrationReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgmm_cause = NasFGmmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgmm_cause,
-        );
+        let mut message = Self::new(fgmm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -1857,41 +1975,46 @@ impl Decode for NasRegistrationReject {
             match iei {
                 0x5F => {
                     message.t3346_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x16 => {
                     message.t3502_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x69 => {
                     message.rejected_nssai = Some(NasRejectedNssai::decode(buffer)?);
-                },
+                }
                 0x75 => {
                     message.cag_information_list = Some(NasCagInformationList::decode(buffer)?);
-                },
+                }
                 0x68 => {
-                    message.extended_rejected_nssai = Some(NasExtendedRejectedNssai::decode(buffer)?);
-                },
+                    message.extended_rejected_nssai =
+                        Some(NasExtendedRejectedNssai::decode(buffer)?);
+                }
                 0x2C => {
-                    message.disaster_return_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_return_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x71 => {
-                    message.extended_cag_information_list = Some(NasExtendedCagInformationList::decode(buffer)?);
-                },
+                    message.extended_cag_information_list =
+                        Some(NasExtendedCagInformationList::decode(buffer)?);
+                }
                 0x3A => {
                     message.lower_bound_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x1D => {
-                    message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                    message
+                        .forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming =
+                        Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
+                }
                 0x1E => {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -1932,11 +2055,7 @@ impl Decode for NasDeregistrationRequestFromUe {
         let de_registration_type = NasDeRegistrationType::decode(buffer)?;
         let fgs_mobile_identity = NasFGsMobileIdentity::decode(buffer)?;
 
-        let  message = Self::new(
-            de_registration_type,
-            fgs_mobile_identity,
-        );
-
+        let message = Self::new(de_registration_type, fgs_mobile_identity);
 
         Ok(message)
     }
@@ -1957,14 +2076,14 @@ pub struct NasDeregistrationRequestToUe {
     pub disaster_return_wait_range: Option<NasRegistrationWaitRange>,
     pub extended_cag_information_list: Option<NasExtendedCagInformationList>,
     pub lower_bound_timer_value: Option<NasGprsTimer3>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming: Option<NasFGsTrackingAreaIdentityList>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service: Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming:
+        Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service:
+        Option<NasFGsTrackingAreaIdentityList>,
 }
 
 impl NasDeregistrationRequestToUe {
-    pub fn new(
-        de_registration_type: NasDeRegistrationType,
-    ) -> Self {
+    pub fn new(de_registration_type: NasDeRegistrationType) -> Self {
         Self {
             de_registration_type,
             fgmm_cause: None,
@@ -2010,7 +2129,10 @@ impl NasDeregistrationRequestToUe {
         self
     }
 
-    pub fn set_extended_cag_information_list(mut self, value: NasExtendedCagInformationList) -> Self {
+    pub fn set_extended_cag_information_list(
+        mut self,
+        value: NasExtendedCagInformationList,
+    ) -> Self {
         self.extended_cag_information_list = Some(value);
         self
     }
@@ -2020,12 +2142,18 @@ impl NasDeregistrationRequestToUe {
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(value);
         self
     }
@@ -2073,7 +2201,9 @@ impl Encode for NasDeregistrationRequestToUe {
             ie.type_field = 0x3A;
             ie.encode(buffer)?;
         }
-        if let Some(ref value) = self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming {
+        if let Some(ref value) =
+            self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming
+        {
             let mut ie = value.clone();
             ie.type_field = 0x1D;
             ie.encode(buffer)?;
@@ -2091,9 +2221,7 @@ impl Decode for NasDeregistrationRequestToUe {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let de_registration_type = NasDeRegistrationType::decode(buffer)?;
 
-        let mut message = Self::new(
-            de_registration_type,
-        );
+        let mut message = Self::new(de_registration_type);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -2108,38 +2236,43 @@ impl Decode for NasDeregistrationRequestToUe {
                 0x58 => {
                     buffer.advance(1); // Skip IEI
                     message.fgmm_cause = Some(NasFGmmCause::decode(buffer)?);
-                },
+                }
                 0x5F => {
                     message.t3346_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x6D => {
                     message.rejected_nssai = Some(NasRejectedNssai::decode(buffer)?);
-                },
+                }
                 0x75 => {
                     message.cag_information_list = Some(NasCagInformationList::decode(buffer)?);
-                },
+                }
                 0x68 => {
-                    message.extended_rejected_nssai = Some(NasExtendedRejectedNssai::decode(buffer)?);
-                },
+                    message.extended_rejected_nssai =
+                        Some(NasExtendedRejectedNssai::decode(buffer)?);
+                }
                 0x2C => {
-                    message.disaster_return_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_return_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x71 => {
-                    message.extended_cag_information_list = Some(NasExtendedCagInformationList::decode(buffer)?);
-                },
+                    message.extended_cag_information_list =
+                        Some(NasExtendedCagInformationList::decode(buffer)?);
+                }
                 0x3A => {
                     message.lower_bound_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x1D => {
-                    message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                    message
+                        .forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming =
+                        Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
+                }
                 0x1E => {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -2164,10 +2297,7 @@ pub struct NasServiceRequest {
 }
 
 impl NasServiceRequest {
-    pub fn new(
-        ngksi: NasKeySetIdentifier,
-        fg_s_tmsi: NasFGsMobileIdentity,
-    ) -> Self {
+    pub fn new(ngksi: NasKeySetIdentifier, fg_s_tmsi: NasFGsMobileIdentity) -> Self {
         Self {
             ngksi,
             fg_s_tmsi,
@@ -2254,10 +2384,7 @@ impl Decode for NasServiceRequest {
         let ngksi = NasKeySetIdentifier::decode(buffer)?;
         let fg_s_tmsi = NasFGsMobileIdentity::decode(buffer)?;
 
-        let mut message = Self::new(
-            ngksi,
-            fg_s_tmsi,
-        );
+        let mut message = Self::new(ngksi, fg_s_tmsi);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -2271,26 +2398,27 @@ impl Decode for NasServiceRequest {
             match iei {
                 0x40 => {
                     message.uplink_data_status = Some(NasUplinkDataStatus::decode(buffer)?);
-                },
+                }
                 0x50 => {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
-                },
+                }
                 0x25 => {
-                    message.allowed_pdu_session_status = Some(NasAllowedPduSessionStatus::decode(buffer)?);
-                },
+                    message.allowed_pdu_session_status =
+                        Some(NasAllowedPduSessionStatus::decode(buffer)?);
+                }
                 0x71 => {
                     message.nas_message_container = Some(NasMessageContainer::decode(buffer)?);
-                },
+                }
                 0x29 => {
                     message.ue_request_type = Some(NasUeRequestType::decode(buffer)?);
-                },
+                }
                 0x28 => {
                     message.paging_restriction = Some(NasPagingRestriction::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -2313,14 +2441,14 @@ pub struct NasServiceReject {
     pub disaster_return_wait_range: Option<NasRegistrationWaitRange>,
     pub extended_cag_information_list: Option<NasExtendedCagInformationList>,
     pub lower_bound_timer_value: Option<NasGprsTimer3>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming: Option<NasFGsTrackingAreaIdentityList>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service: Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming:
+        Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service:
+        Option<NasFGsTrackingAreaIdentityList>,
 }
 
 impl NasServiceReject {
-    pub fn new(
-        fgmm_cause: NasFGmmCause,
-    ) -> Self {
+    pub fn new(fgmm_cause: NasFGmmCause) -> Self {
         Self {
             fgmm_cause,
             pdu_session_status: None,
@@ -2366,7 +2494,10 @@ impl NasServiceReject {
         self
     }
 
-    pub fn set_extended_cag_information_list(mut self, value: NasExtendedCagInformationList) -> Self {
+    pub fn set_extended_cag_information_list(
+        mut self,
+        value: NasExtendedCagInformationList,
+    ) -> Self {
         self.extended_cag_information_list = Some(value);
         self
     }
@@ -2376,12 +2507,18 @@ impl NasServiceReject {
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(value);
         self
     }
@@ -2430,7 +2567,9 @@ impl Encode for NasServiceReject {
             ie.type_field = 0x3A;
             ie.encode(buffer)?;
         }
-        if let Some(ref value) = self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming {
+        if let Some(ref value) =
+            self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming
+        {
             let mut ie = value.clone();
             ie.type_field = 0x1D;
             ie.encode(buffer)?;
@@ -2448,9 +2587,7 @@ impl Decode for NasServiceReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgmm_cause = NasFGmmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgmm_cause,
-        );
+        let mut message = Self::new(fgmm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -2464,38 +2601,42 @@ impl Decode for NasServiceReject {
             match iei {
                 0x50 => {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
-                },
+                }
                 0x5F => {
                     message.t3346_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x6B => {
                     message.t3448_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x75 => {
                     message.cag_information_list = Some(NasCagInformationList::decode(buffer)?);
-                },
+                }
                 0x2C => {
-                    message.disaster_return_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_return_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x71 => {
-                    message.extended_cag_information_list = Some(NasExtendedCagInformationList::decode(buffer)?);
-                },
+                    message.extended_cag_information_list =
+                        Some(NasExtendedCagInformationList::decode(buffer)?);
+                }
                 0x3A => {
                     message.lower_bound_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x1D => {
-                    message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                    message
+                        .forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming =
+                        Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
+                }
                 0x1E => {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -2511,17 +2652,19 @@ pub struct NasServiceAccept {
     // Optional fields
     pub pdu_session_status: Option<NasPduSessionStatus>,
     pub pdu_session_reactivation_result: Option<NasPduSessionReactivationResult>,
-    pub pdu_session_reactivation_result_error_cause: Option<NasPduSessionReactivationResultErrorCause>,
+    pub pdu_session_reactivation_result_error_cause:
+        Option<NasPduSessionReactivationResultErrorCause>,
     pub eap_message: Option<NasEapMessage>,
     pub t3448_value: Option<NasGprsTimer2>,
     pub fgs_additional_request_result: Option<NasFGsAdditionalRequestResult>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming: Option<NasFGsTrackingAreaIdentityList>,
-    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service: Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming:
+        Option<NasFGsTrackingAreaIdentityList>,
+    pub forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service:
+        Option<NasFGsTrackingAreaIdentityList>,
 }
 
 impl NasServiceAccept {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             pdu_session_status: None,
             pdu_session_reactivation_result: None,
@@ -2539,12 +2682,18 @@ impl NasServiceAccept {
         self
     }
 
-    pub fn set_pdu_session_reactivation_result(mut self, value: NasPduSessionReactivationResult) -> Self {
+    pub fn set_pdu_session_reactivation_result(
+        mut self,
+        value: NasPduSessionReactivationResult,
+    ) -> Self {
         self.pdu_session_reactivation_result = Some(value);
         self
     }
 
-    pub fn set_pdu_session_reactivation_result_error_cause(mut self, value: NasPduSessionReactivationResultErrorCause) -> Self {
+    pub fn set_pdu_session_reactivation_result_error_cause(
+        mut self,
+        value: NasPduSessionReactivationResultErrorCause,
+    ) -> Self {
         self.pdu_session_reactivation_result_error_cause = Some(value);
         self
     }
@@ -2559,17 +2708,26 @@ impl NasServiceAccept {
         self
     }
 
-    pub fn set_fgs_additional_request_result(mut self, value: NasFGsAdditionalRequestResult) -> Self {
+    pub fn set_fgs_additional_request_result(
+        mut self,
+        value: NasFGsAdditionalRequestResult,
+    ) -> Self {
         self.fgs_additional_request_result = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(value);
         self
     }
 
-    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(mut self, value: NasFGsTrackingAreaIdentityList) -> Self {
+    pub fn set_forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service(
+        mut self,
+        value: NasFGsTrackingAreaIdentityList,
+    ) -> Self {
         self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(value);
         self
     }
@@ -2607,7 +2765,9 @@ impl Encode for NasServiceAccept {
             ie.type_field = 0x34;
             ie.encode(buffer)?;
         }
-        if let Some(ref value) = self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming {
+        if let Some(ref value) =
+            self.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming
+        {
             let mut ie = value.clone();
             ie.type_field = 0x1D;
             ie.encode(buffer)?;
@@ -2623,9 +2783,7 @@ impl Encode for NasServiceAccept {
 
 impl Decode for NasServiceAccept {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -2639,32 +2797,37 @@ impl Decode for NasServiceAccept {
             match iei {
                 0x50 => {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
-                },
+                }
                 0x26 => {
-                    message.pdu_session_reactivation_result = Some(NasPduSessionReactivationResult::decode(buffer)?);
-                },
+                    message.pdu_session_reactivation_result =
+                        Some(NasPduSessionReactivationResult::decode(buffer)?);
+                }
                 0x72 => {
-                    message.pdu_session_reactivation_result_error_cause = Some(NasPduSessionReactivationResultErrorCause::decode(buffer)?);
-                },
+                    message.pdu_session_reactivation_result_error_cause =
+                        Some(NasPduSessionReactivationResultErrorCause::decode(buffer)?);
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x6B => {
                     message.t3448_value = Some(NasGprsTimer2::decode(buffer)?);
-                },
+                }
                 0x34 => {
-                    message.fgs_additional_request_result = Some(NasFGsAdditionalRequestResult::decode(buffer)?);
-                },
+                    message.fgs_additional_request_result =
+                        Some(NasFGsAdditionalRequestResult::decode(buffer)?);
+                }
                 0x1D => {
-                    message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                    message
+                        .forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_for_roaming =
+                        Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
+                }
                 0x1E => {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -2693,12 +2856,14 @@ pub struct NasConfigurationUpdateCommand {
     pub network_slicing_indication: Option<NasNetworkSlicingIndication>,
     pub configured_nssai: Option<NasNssai>,
     pub rejected_nssai: Option<NasRejectedNssai>,
-    pub operator_defined_access_category_definitions: Option<NasOperatorDefinedAccessCategoryDefinitions>,
+    pub operator_defined_access_category_definitions:
+        Option<NasOperatorDefinedAccessCategoryDefinitions>,
     pub sms_indication: Option<NasSmsIndication>,
     pub t3447_value: Option<NasGprsTimer3>,
     pub cag_information_list: Option<NasCagInformationList>,
     pub ue_radio_capability_id: Option<NasUeRadioCapabilityId>,
-    pub ue_radio_capability_id_deletion_indication: Option<NasUeRadioCapabilityIdDeletionIndication>,
+    pub ue_radio_capability_id_deletion_indication:
+        Option<NasUeRadioCapabilityIdDeletionIndication>,
     pub fgs_registration_result: Option<NasFGsRegistrationResult>,
     pub truncated_fg_s_tmsi_configuration: Option<NasTruncatedFGSTmsiConfiguration>,
     pub additional_configuration_indication: Option<NasAdditionalConfigurationIndication>,
@@ -2707,7 +2872,8 @@ pub struct NasConfigurationUpdateCommand {
     pub nssrg_information: Option<NasNssrgInformation>,
     pub disaster_roaming_wait_range: Option<NasRegistrationWaitRange>,
     pub disaster_return_wait_range: Option<NasRegistrationWaitRange>,
-    pub list_of_plmns_to_be_used_in_disaster_condition: Option<NasListOfPlmnsToBeUsedInDisasterCondition>,
+    pub list_of_plmns_to_be_used_in_disaster_condition:
+        Option<NasListOfPlmnsToBeUsedInDisasterCondition>,
     pub extended_cag_information_list: Option<NasExtendedCagInformationList>,
     pub updated_peips_assistance_information: Option<NasPeipsAssistanceInformation>,
     pub nsag_information: Option<NasNsagInformation>,
@@ -2715,8 +2881,7 @@ pub struct NasConfigurationUpdateCommand {
 }
 
 impl NasConfigurationUpdateCommand {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             configuration_update_indication: None,
             fg_guti: None,
@@ -2755,7 +2920,10 @@ impl NasConfigurationUpdateCommand {
         }
     }
 
-    pub fn set_configuration_update_indication(mut self, value: NasConfigurationUpdateIndication) -> Self {
+    pub fn set_configuration_update_indication(
+        mut self,
+        value: NasConfigurationUpdateIndication,
+    ) -> Self {
         self.configuration_update_indication = Some(value);
         self
     }
@@ -2830,7 +2998,10 @@ impl NasConfigurationUpdateCommand {
         self
     }
 
-    pub fn set_operator_defined_access_category_definitions(mut self, value: NasOperatorDefinedAccessCategoryDefinitions) -> Self {
+    pub fn set_operator_defined_access_category_definitions(
+        mut self,
+        value: NasOperatorDefinedAccessCategoryDefinitions,
+    ) -> Self {
         self.operator_defined_access_category_definitions = Some(value);
         self
     }
@@ -2855,7 +3026,10 @@ impl NasConfigurationUpdateCommand {
         self
     }
 
-    pub fn set_ue_radio_capability_id_deletion_indication(mut self, value: NasUeRadioCapabilityIdDeletionIndication) -> Self {
+    pub fn set_ue_radio_capability_id_deletion_indication(
+        mut self,
+        value: NasUeRadioCapabilityIdDeletionIndication,
+    ) -> Self {
         self.ue_radio_capability_id_deletion_indication = Some(value);
         self
     }
@@ -2865,12 +3039,18 @@ impl NasConfigurationUpdateCommand {
         self
     }
 
-    pub fn set_truncated_fg_s_tmsi_configuration(mut self, value: NasTruncatedFGSTmsiConfiguration) -> Self {
+    pub fn set_truncated_fg_s_tmsi_configuration(
+        mut self,
+        value: NasTruncatedFGSTmsiConfiguration,
+    ) -> Self {
         self.truncated_fg_s_tmsi_configuration = Some(value);
         self
     }
 
-    pub fn set_additional_configuration_indication(mut self, value: NasAdditionalConfigurationIndication) -> Self {
+    pub fn set_additional_configuration_indication(
+        mut self,
+        value: NasAdditionalConfigurationIndication,
+    ) -> Self {
         self.additional_configuration_indication = Some(value);
         self
     }
@@ -2900,17 +3080,26 @@ impl NasConfigurationUpdateCommand {
         self
     }
 
-    pub fn set_list_of_plmns_to_be_used_in_disaster_condition(mut self, value: NasListOfPlmnsToBeUsedInDisasterCondition) -> Self {
+    pub fn set_list_of_plmns_to_be_used_in_disaster_condition(
+        mut self,
+        value: NasListOfPlmnsToBeUsedInDisasterCondition,
+    ) -> Self {
         self.list_of_plmns_to_be_used_in_disaster_condition = Some(value);
         self
     }
 
-    pub fn set_extended_cag_information_list(mut self, value: NasExtendedCagInformationList) -> Self {
+    pub fn set_extended_cag_information_list(
+        mut self,
+        value: NasExtendedCagInformationList,
+    ) -> Self {
         self.extended_cag_information_list = Some(value);
         self
     }
 
-    pub fn set_updated_peips_assistance_information(mut self, value: NasPeipsAssistanceInformation) -> Self {
+    pub fn set_updated_peips_assistance_information(
+        mut self,
+        value: NasPeipsAssistanceInformation,
+    ) -> Self {
         self.updated_peips_assistance_information = Some(value);
         self
     }
@@ -3102,9 +3291,7 @@ impl Encode for NasConfigurationUpdateCommand {
 
 impl Decode for NasConfigurationUpdateCommand {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3117,113 +3304,129 @@ impl Decode for NasConfigurationUpdateCommand {
 
             match iei {
                 0xD0 => {
-                    message.configuration_update_indication = Some(NasConfigurationUpdateIndication::decode(buffer)?);
-                },
+                    message.configuration_update_indication =
+                        Some(NasConfigurationUpdateIndication::decode(buffer)?);
+                }
                 0x77 => {
                     buffer.advance(1); // Skip IEI
                     message.fg_guti = Some(NasFGsMobileIdentity::decode(buffer)?);
-                },
+                }
                 0x54 => {
                     message.tai_list = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
-                },
+                }
                 0x15 => {
                     message.allowed_nssai = Some(NasNssai::decode(buffer)?);
-                },
+                }
                 0x27 => {
                     message.service_area_list = Some(NasServiceAreaList::decode(buffer)?);
-                },
+                }
                 0x43 => {
                     message.full_name_for_network = Some(NasNetworkName::decode(buffer)?);
-                },
+                }
                 0x45 => {
                     message.short_name_for_network = Some(NasNetworkName::decode(buffer)?);
-                },
+                }
                 0x46 => {
                     message.local_time_zone = Some(NasTimeZone::decode(buffer)?);
-                },
+                }
                 0x47 => {
-                    message.universal_time_and_local_time_zone = Some(NasTimeZoneAndTime::decode(buffer)?);
-                },
+                    message.universal_time_and_local_time_zone =
+                        Some(NasTimeZoneAndTime::decode(buffer)?);
+                }
                 0x49 => {
-                    message.network_daylight_saving_time = Some(NasDaylightSavingTime::decode(buffer)?);
-                },
+                    message.network_daylight_saving_time =
+                        Some(NasDaylightSavingTime::decode(buffer)?);
+                }
                 0x79 => {
                     message.ladn_information = Some(NasLadnInformation::decode(buffer)?);
-                },
+                }
                 0xB0 => {
                     message.mico_indication = Some(NasMicoIndication::decode(buffer)?);
-                },
+                }
                 0x90 => {
-                    message.network_slicing_indication = Some(NasNetworkSlicingIndication::decode(buffer)?);
-                },
+                    message.network_slicing_indication =
+                        Some(NasNetworkSlicingIndication::decode(buffer)?);
+                }
                 0x31 => {
                     message.configured_nssai = Some(NasNssai::decode(buffer)?);
-                },
+                }
                 0x11 => {
                     message.rejected_nssai = Some(NasRejectedNssai::decode(buffer)?);
-                },
+                }
                 0x76 => {
-                    message.operator_defined_access_category_definitions = Some(NasOperatorDefinedAccessCategoryDefinitions::decode(buffer)?);
-                },
+                    message.operator_defined_access_category_definitions =
+                        Some(NasOperatorDefinedAccessCategoryDefinitions::decode(buffer)?);
+                }
                 0xF0 => {
                     message.sms_indication = Some(NasSmsIndication::decode(buffer)?);
-                },
+                }
                 0x6C => {
                     message.t3447_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x75 => {
                     message.cag_information_list = Some(NasCagInformationList::decode(buffer)?);
-                },
+                }
                 0x67 => {
                     message.ue_radio_capability_id = Some(NasUeRadioCapabilityId::decode(buffer)?);
-                },
+                }
                 0xA0 => {
-                    message.ue_radio_capability_id_deletion_indication = Some(NasUeRadioCapabilityIdDeletionIndication::decode(buffer)?);
-                },
+                    message.ue_radio_capability_id_deletion_indication =
+                        Some(NasUeRadioCapabilityIdDeletionIndication::decode(buffer)?);
+                }
                 0x44 => {
                     buffer.advance(1); // Skip IEI
-                    message.fgs_registration_result = Some(NasFGsRegistrationResult::decode(buffer)?);
-                },
+                    message.fgs_registration_result =
+                        Some(NasFGsRegistrationResult::decode(buffer)?);
+                }
                 0x1B => {
-                    message.truncated_fg_s_tmsi_configuration = Some(NasTruncatedFGSTmsiConfiguration::decode(buffer)?);
-                },
+                    message.truncated_fg_s_tmsi_configuration =
+                        Some(NasTruncatedFGSTmsiConfiguration::decode(buffer)?);
+                }
                 0xC0 => {
-                    message.additional_configuration_indication = Some(NasAdditionalConfigurationIndication::decode(buffer)?);
-                },
+                    message.additional_configuration_indication =
+                        Some(NasAdditionalConfigurationIndication::decode(buffer)?);
+                }
                 0x68 => {
-                    message.extended_rejected_nssai = Some(NasExtendedRejectedNssai::decode(buffer)?);
-                },
+                    message.extended_rejected_nssai =
+                        Some(NasExtendedRejectedNssai::decode(buffer)?);
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
                 0x70 => {
                     message.nssrg_information = Some(NasNssrgInformation::decode(buffer)?);
-                },
+                }
                 0x14 => {
-                    message.disaster_roaming_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_roaming_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x2C => {
-                    message.disaster_return_wait_range = Some(NasRegistrationWaitRange::decode(buffer)?);
-                },
+                    message.disaster_return_wait_range =
+                        Some(NasRegistrationWaitRange::decode(buffer)?);
+                }
                 0x13 => {
-                    message.list_of_plmns_to_be_used_in_disaster_condition = Some(NasListOfPlmnsToBeUsedInDisasterCondition::decode(buffer)?);
-                },
+                    message.list_of_plmns_to_be_used_in_disaster_condition =
+                        Some(NasListOfPlmnsToBeUsedInDisasterCondition::decode(buffer)?);
+                }
                 0x71 => {
-                    message.extended_cag_information_list = Some(NasExtendedCagInformationList::decode(buffer)?);
-                },
+                    message.extended_cag_information_list =
+                        Some(NasExtendedCagInformationList::decode(buffer)?);
+                }
                 0x1F => {
-                    message.updated_peips_assistance_information = Some(NasPeipsAssistanceInformation::decode(buffer)?);
-                },
+                    message.updated_peips_assistance_information =
+                        Some(NasPeipsAssistanceInformation::decode(buffer)?);
+                }
                 0x73 => {
                     message.nsag_information = Some(NasNsagInformation::decode(buffer)?);
-                },
+                }
                 0xE0 => {
                     message.priority_indicator = Some(NasPriorityIndicator::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3245,10 +3448,7 @@ pub struct NasAuthenticationRequest {
 }
 
 impl NasAuthenticationRequest {
-    pub fn new(
-        ngksi: NasKeySetIdentifier,
-        abba: NasAbba,
-    ) -> Self {
+    pub fn new(ngksi: NasKeySetIdentifier, abba: NasAbba) -> Self {
         Self {
             ngksi,
             abba,
@@ -3258,12 +3458,18 @@ impl NasAuthenticationRequest {
         }
     }
 
-    pub fn set_authentication_parameter_rand(mut self, value: NasAuthenticationParameterRand) -> Self {
+    pub fn set_authentication_parameter_rand(
+        mut self,
+        value: NasAuthenticationParameterRand,
+    ) -> Self {
         self.authentication_parameter_rand = Some(value);
         self
     }
 
-    pub fn set_authentication_parameter_autn(mut self, value: NasAuthenticationParameterAutn) -> Self {
+    pub fn set_authentication_parameter_autn(
+        mut self,
+        value: NasAuthenticationParameterAutn,
+    ) -> Self {
         self.authentication_parameter_autn = Some(value);
         self
     }
@@ -3302,10 +3508,7 @@ impl Decode for NasAuthenticationRequest {
         let ngksi = NasKeySetIdentifier::decode(buffer)?;
         let abba = NasAbba::decode(buffer)?;
 
-        let mut message = Self::new(
-            ngksi,
-            abba,
-        );
+        let mut message = Self::new(ngksi, abba);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3318,18 +3521,20 @@ impl Decode for NasAuthenticationRequest {
 
             match iei {
                 0x21 => {
-                    message.authentication_parameter_rand = Some(NasAuthenticationParameterRand::decode(buffer)?);
-                },
+                    message.authentication_parameter_rand =
+                        Some(NasAuthenticationParameterRand::decode(buffer)?);
+                }
                 0x20 => {
-                    message.authentication_parameter_autn = Some(NasAuthenticationParameterAutn::decode(buffer)?);
-                },
+                    message.authentication_parameter_autn =
+                        Some(NasAuthenticationParameterAutn::decode(buffer)?);
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3348,15 +3553,17 @@ pub struct NasAuthenticationResponse {
 }
 
 impl NasAuthenticationResponse {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             authentication_response_parameter: None,
             eap_message: None,
         }
     }
 
-    pub fn set_authentication_response_parameter(mut self, value: NasAuthenticationResponseParameter) -> Self {
+    pub fn set_authentication_response_parameter(
+        mut self,
+        value: NasAuthenticationResponseParameter,
+    ) -> Self {
         self.authentication_response_parameter = Some(value);
         self
     }
@@ -3385,9 +3592,7 @@ impl Encode for NasAuthenticationResponse {
 
 impl Decode for NasAuthenticationResponse {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3400,15 +3605,16 @@ impl Decode for NasAuthenticationResponse {
 
             match iei {
                 0x2D => {
-                    message.authentication_response_parameter = Some(NasAuthenticationResponseParameter::decode(buffer)?);
-                },
+                    message.authentication_response_parameter =
+                        Some(NasAuthenticationResponseParameter::decode(buffer)?);
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3426,11 +3632,8 @@ pub struct NasAuthenticationReject {
 }
 
 impl NasAuthenticationReject {
-    pub fn new(
-    ) -> Self {
-        Self {
-            eap_message: None,
-        }
+    pub fn new() -> Self {
+        Self { eap_message: None }
     }
 
     pub fn set_eap_message(mut self, value: NasEapMessage) -> Self {
@@ -3452,9 +3655,7 @@ impl Encode for NasAuthenticationReject {
 
 impl Decode for NasAuthenticationReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3468,11 +3669,11 @@ impl Decode for NasAuthenticationReject {
             match iei {
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3491,16 +3692,17 @@ pub struct NasAuthenticationFailure {
 }
 
 impl NasAuthenticationFailure {
-    pub fn new(
-        fgmm_cause: NasFGmmCause,
-    ) -> Self {
+    pub fn new(fgmm_cause: NasFGmmCause) -> Self {
         Self {
             fgmm_cause,
             authentication_failure_parameter: None,
         }
     }
 
-    pub fn set_authentication_failure_parameter(mut self, value: NasAuthenticationFailureParameter) -> Self {
+    pub fn set_authentication_failure_parameter(
+        mut self,
+        value: NasAuthenticationFailureParameter,
+    ) -> Self {
         self.authentication_failure_parameter = Some(value);
         self
     }
@@ -3522,9 +3724,7 @@ impl Decode for NasAuthenticationFailure {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgmm_cause = NasFGmmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgmm_cause,
-        );
+        let mut message = Self::new(fgmm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3537,12 +3737,13 @@ impl Decode for NasAuthenticationFailure {
 
             match iei {
                 0x30 => {
-                    message.authentication_failure_parameter = Some(NasAuthenticationFailureParameter::decode(buffer)?);
-                },
-                _ => {
+                    message.authentication_failure_parameter =
+                        Some(NasAuthenticationFailureParameter::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3562,10 +3763,7 @@ pub struct NasAuthenticationResult {
 }
 
 impl NasAuthenticationResult {
-    pub fn new(
-        ngksi: NasKeySetIdentifier,
-        eap_message: NasEapMessage,
-    ) -> Self {
+    pub fn new(ngksi: NasKeySetIdentifier, eap_message: NasEapMessage) -> Self {
         Self {
             ngksi,
             eap_message,
@@ -3596,10 +3794,7 @@ impl Decode for NasAuthenticationResult {
         let ngksi = NasKeySetIdentifier::decode(buffer)?;
         let eap_message = NasEapMessage::decode(buffer)?;
 
-        let mut message = Self::new(
-            ngksi,
-            eap_message,
-        );
+        let mut message = Self::new(ngksi, eap_message);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3614,11 +3809,11 @@ impl Decode for NasAuthenticationResult {
                 0x38 => {
                     buffer.advance(1); // Skip IEI
                     message.abba = Some(NasAbba::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3634,12 +3829,8 @@ pub struct NasIdentityRequest {
 }
 
 impl NasIdentityRequest {
-    pub fn new(
-        identity_type: NasFGsIdentityType,
-    ) -> Self {
-        Self {
-            identity_type,
-        }
+    pub fn new(identity_type: NasFGsIdentityType) -> Self {
+        Self { identity_type }
     }
 }
 
@@ -3654,10 +3845,7 @@ impl Decode for NasIdentityRequest {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let identity_type = NasFGsIdentityType::decode(buffer)?;
 
-        let  message = Self::new(
-            identity_type,
-        );
-
+        let message = Self::new(identity_type);
 
         Ok(message)
     }
@@ -3671,12 +3859,8 @@ pub struct NasIdentityResponse {
 }
 
 impl NasIdentityResponse {
-    pub fn new(
-        mobile_identity: NasFGsMobileIdentity,
-    ) -> Self {
-        Self {
-            mobile_identity,
-        }
+    pub fn new(mobile_identity: NasFGsMobileIdentity) -> Self {
+        Self { mobile_identity }
     }
 }
 
@@ -3691,10 +3875,7 @@ impl Decode for NasIdentityResponse {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let mobile_identity = NasFGsMobileIdentity::decode(buffer)?;
 
-        let  message = Self::new(
-            mobile_identity,
-        );
-
+        let message = Self::new(mobile_identity);
 
         Ok(message)
     }
@@ -3741,12 +3922,18 @@ impl NasSecurityModeCommand {
         self
     }
 
-    pub fn set_selected_eps_nas_security_algorithms(mut self, value: NasEpsNasSecurityAlgorithms) -> Self {
+    pub fn set_selected_eps_nas_security_algorithms(
+        mut self,
+        value: NasEpsNasSecurityAlgorithms,
+    ) -> Self {
         self.selected_eps_nas_security_algorithms = Some(value);
         self
     }
 
-    pub fn set_additional_fg_security_information(mut self, value: NasAdditionalFGSecurityInformation) -> Self {
+    pub fn set_additional_fg_security_information(
+        mut self,
+        value: NasAdditionalFGSecurityInformation,
+    ) -> Self {
         self.additional_fg_security_information = Some(value);
         self
     }
@@ -3761,7 +3948,10 @@ impl NasSecurityModeCommand {
         self
     }
 
-    pub fn set_replayed_s1_ue_security_capabilities(mut self, value: NasS1UeSecurityCapability) -> Self {
+    pub fn set_replayed_s1_ue_security_capabilities(
+        mut self,
+        value: NasS1UeSecurityCapability,
+    ) -> Self {
         self.replayed_s1_ue_security_capabilities = Some(value);
         self
     }
@@ -3829,27 +4019,30 @@ impl Decode for NasSecurityModeCommand {
             match iei {
                 0xE0 => {
                     message.imeisv_request = Some(NasImeisvRequest::decode(buffer)?);
-                },
+                }
                 0x57 => {
-                    message.selected_eps_nas_security_algorithms = Some(NasEpsNasSecurityAlgorithms::decode(buffer)?);
-                },
+                    message.selected_eps_nas_security_algorithms =
+                        Some(NasEpsNasSecurityAlgorithms::decode(buffer)?);
+                }
                 0x36 => {
-                    message.additional_fg_security_information = Some(NasAdditionalFGSecurityInformation::decode(buffer)?);
-                },
+                    message.additional_fg_security_information =
+                        Some(NasAdditionalFGSecurityInformation::decode(buffer)?);
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x38 => {
                     buffer.advance(1); // Skip IEI
                     message.abba = Some(NasAbba::decode(buffer)?);
-                },
+                }
                 0x19 => {
-                    message.replayed_s1_ue_security_capabilities = Some(NasS1UeSecurityCapability::decode(buffer)?);
-                },
-                _ => {
+                    message.replayed_s1_ue_security_capabilities =
+                        Some(NasS1UeSecurityCapability::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3869,8 +4062,7 @@ pub struct NasSecurityModeComplete {
 }
 
 impl NasSecurityModeComplete {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             imeisv: None,
             nas_message_container: None,
@@ -3915,9 +4107,7 @@ impl Encode for NasSecurityModeComplete {
 
 impl Decode for NasSecurityModeComplete {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -3932,18 +4122,18 @@ impl Decode for NasSecurityModeComplete {
                 0x77 => {
                     buffer.advance(1); // Skip IEI
                     message.imeisv = Some(NasFGsMobileIdentity::decode(buffer)?);
-                },
+                }
                 0x71 => {
                     message.nas_message_container = Some(NasMessageContainer::decode(buffer)?);
-                },
+                }
                 0x78 => {
                     buffer.advance(1); // Skip IEI
                     message.non_imeisv_pei = Some(NasFGsMobileIdentity::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -3959,12 +4149,8 @@ pub struct NasSecurityModeReject {
 }
 
 impl NasSecurityModeReject {
-    pub fn new(
-        fgmm_cause: NasFGmmCause,
-    ) -> Self {
-        Self {
-            fgmm_cause,
-        }
+    pub fn new(fgmm_cause: NasFGmmCause) -> Self {
+        Self { fgmm_cause }
     }
 }
 
@@ -3979,10 +4165,7 @@ impl Decode for NasSecurityModeReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgmm_cause = NasFGmmCause::decode(buffer)?;
 
-        let  message = Self::new(
-            fgmm_cause,
-        );
-
+        let message = Self::new(fgmm_cause);
 
         Ok(message)
     }
@@ -3996,12 +4179,8 @@ pub struct NasFGmmStatus {
 }
 
 impl NasFGmmStatus {
-    pub fn new(
-        fgmm_cause: NasFGmmCause,
-    ) -> Self {
-        Self {
-            fgmm_cause,
-        }
+    pub fn new(fgmm_cause: NasFGmmCause) -> Self {
+        Self { fgmm_cause }
     }
 }
 
@@ -4016,10 +4195,7 @@ impl Decode for NasFGmmStatus {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgmm_cause = NasFGmmCause::decode(buffer)?;
 
-        let  message = Self::new(
-            fgmm_cause,
-        );
-
+        let message = Self::new(fgmm_cause);
 
         Ok(message)
     }
@@ -4033,12 +4209,8 @@ pub struct NasNotification {
 }
 
 impl NasNotification {
-    pub fn new(
-        access_type: NasAccessType,
-    ) -> Self {
-        Self {
-            access_type,
-        }
+    pub fn new(access_type: NasAccessType) -> Self {
+        Self { access_type }
     }
 }
 
@@ -4053,10 +4225,7 @@ impl Decode for NasNotification {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let access_type = NasAccessType::decode(buffer)?;
 
-        let  message = Self::new(
-            access_type,
-        );
-
+        let message = Self::new(access_type);
 
         Ok(message)
     }
@@ -4072,8 +4241,7 @@ pub struct NasNotificationResponse {
 }
 
 impl NasNotificationResponse {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             pdu_session_status: None,
         }
@@ -4098,9 +4266,7 @@ impl Encode for NasNotificationResponse {
 
 impl Decode for NasNotificationResponse {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -4114,11 +4280,11 @@ impl Decode for NasNotificationResponse {
             match iei {
                 0x50 => {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -4198,7 +4364,10 @@ impl NasUlNasTransport {
         self
     }
 
-    pub fn set_release_assistance_indication(mut self, value: NasReleaseAssistanceIndication) -> Self {
+    pub fn set_release_assistance_indication(
+        mut self,
+        value: NasReleaseAssistanceIndication,
+    ) -> Self {
         self.release_assistance_indication = Some(value);
         self
     }
@@ -4257,10 +4426,7 @@ impl Decode for NasUlNasTransport {
         let payload_container_type = NasPayloadContainerType::decode(buffer)?;
         let payload_container = NasPayloadContainer::decode(buffer)?;
 
-        let mut message = Self::new(
-            payload_container_type,
-            payload_container,
-        );
+        let mut message = Self::new(payload_container_type, payload_container);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -4274,32 +4440,35 @@ impl Decode for NasUlNasTransport {
             match iei {
                 0x12 => {
                     message.pdu_session_id = Some(NasPduSessionIdentity2::decode(buffer)?);
-                },
+                }
                 0x59 => {
                     message.old_pdu_session_id = Some(NasPduSessionIdentity2::decode(buffer)?);
-                },
+                }
                 0x80 => {
                     message.request_type = Some(NasRequestType::decode(buffer)?);
-                },
+                }
                 0x22 => {
                     message.s_nssai = Some(NasSNssai::decode(buffer)?);
-                },
+                }
                 0x25 => {
                     message.dnn = Some(NasDnn::decode(buffer)?);
-                },
+                }
                 0x24 => {
-                    message.additional_information = Some(NasAdditionalInformation::decode(buffer)?);
-                },
+                    message.additional_information =
+                        Some(NasAdditionalInformation::decode(buffer)?);
+                }
                 0xA0 => {
-                    message.ma_pdu_session_information = Some(NasMaPduSessionInformation::decode(buffer)?);
-                },
+                    message.ma_pdu_session_information =
+                        Some(NasMaPduSessionInformation::decode(buffer)?);
+                }
                 0xF0 => {
-                    message.release_assistance_indication = Some(NasReleaseAssistanceIndication::decode(buffer)?);
-                },
-                _ => {
+                    message.release_assistance_indication =
+                        Some(NasReleaseAssistanceIndication::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -4401,10 +4570,7 @@ impl Decode for NasDlNasTransport {
         let payload_container_type = NasPayloadContainerType::decode(buffer)?;
         let payload_container = NasPayloadContainer::decode(buffer)?;
 
-        let mut message = Self::new(
-            payload_container_type,
-            payload_container,
-        );
+        let mut message = Self::new(payload_container_type, payload_container);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -4418,24 +4584,25 @@ impl Decode for NasDlNasTransport {
             match iei {
                 0x12 => {
                     message.pdu_session_id = Some(NasPduSessionIdentity2::decode(buffer)?);
-                },
+                }
                 0x24 => {
-                    message.additional_information = Some(NasAdditionalInformation::decode(buffer)?);
-                },
+                    message.additional_information =
+                        Some(NasAdditionalInformation::decode(buffer)?);
+                }
                 0x58 => {
                     buffer.advance(1); // Skip IEI
                     message.fgmm_cause = Some(NasFGmmCause::decode(buffer)?);
-                },
+                }
                 0x37 => {
                     message.back_off_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x3A => {
                     message.lower_bound_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -4453,7 +4620,8 @@ pub struct NasPduSessionEstablishmentRequest {
     pub pdu_session_type: Option<NasPduSessionType>,
     pub ssc_mode: Option<NasSscMode>,
     pub fgsm_capability: Option<NasFGsmCapability>,
-    pub maximum_number_of_supported_packet_filters: Option<NasMaximumNumberOfSupportedPacketFilters>,
+    pub maximum_number_of_supported_packet_filters:
+        Option<NasMaximumNumberOfSupportedPacketFilters>,
     pub always_on_pdu_session_requested: Option<NasAlwaysOnPduSessionRequested>,
     pub sm_pdu_dn_request_container: Option<NasSmPduDnRequestContainer>,
     pub extended_protocol_configuration_options: Option<NasExtendedProtocolConfigurationOptions>,
@@ -4461,7 +4629,8 @@ pub struct NasPduSessionEstablishmentRequest {
     pub ds_tt_ethernet_port_mac_address: Option<NasDsTtEthernetPortMacAddress>,
     pub ue_ds_tt_residence_time: Option<NasUeDsTtResidenceTime>,
     pub port_management_information_container: Option<NasPortManagementInformationContainer>,
-    pub ethernet_header_compression_configuration: Option<NasEthernetHeaderCompressionConfiguration>,
+    pub ethernet_header_compression_configuration:
+        Option<NasEthernetHeaderCompressionConfiguration>,
     pub suggested_interface_identifier: Option<NasPduAddress>,
     pub service_level_aa_container: Option<NasServiceLevelAaContainer>,
     pub requested_mbs_container: Option<NasRequestedMbsContainer>,
@@ -4510,12 +4679,18 @@ impl NasPduSessionEstablishmentRequest {
         self
     }
 
-    pub fn set_maximum_number_of_supported_packet_filters(mut self, value: NasMaximumNumberOfSupportedPacketFilters) -> Self {
+    pub fn set_maximum_number_of_supported_packet_filters(
+        mut self,
+        value: NasMaximumNumberOfSupportedPacketFilters,
+    ) -> Self {
         self.maximum_number_of_supported_packet_filters = Some(value);
         self
     }
 
-    pub fn set_always_on_pdu_session_requested(mut self, value: NasAlwaysOnPduSessionRequested) -> Self {
+    pub fn set_always_on_pdu_session_requested(
+        mut self,
+        value: NasAlwaysOnPduSessionRequested,
+    ) -> Self {
         self.always_on_pdu_session_requested = Some(value);
         self
     }
@@ -4525,17 +4700,26 @@ impl NasPduSessionEstablishmentRequest {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
 
-    pub fn set_ip_header_compression_configuration(mut self, value: NasIpHeaderCompressionConfiguration) -> Self {
+    pub fn set_ip_header_compression_configuration(
+        mut self,
+        value: NasIpHeaderCompressionConfiguration,
+    ) -> Self {
         self.ip_header_compression_configuration = Some(value);
         self
     }
 
-    pub fn set_ds_tt_ethernet_port_mac_address(mut self, value: NasDsTtEthernetPortMacAddress) -> Self {
+    pub fn set_ds_tt_ethernet_port_mac_address(
+        mut self,
+        value: NasDsTtEthernetPortMacAddress,
+    ) -> Self {
         self.ds_tt_ethernet_port_mac_address = Some(value);
         self
     }
@@ -4545,12 +4729,18 @@ impl NasPduSessionEstablishmentRequest {
         self
     }
 
-    pub fn set_port_management_information_container(mut self, value: NasPortManagementInformationContainer) -> Self {
+    pub fn set_port_management_information_container(
+        mut self,
+        value: NasPortManagementInformationContainer,
+    ) -> Self {
         self.port_management_information_container = Some(value);
         self
     }
 
-    pub fn set_ethernet_header_compression_configuration(mut self, value: NasEthernetHeaderCompressionConfiguration) -> Self {
+    pub fn set_ethernet_header_compression_configuration(
+        mut self,
+        value: NasEthernetHeaderCompressionConfiguration,
+    ) -> Self {
         self.ethernet_header_compression_configuration = Some(value);
         self
     }
@@ -4674,11 +4864,10 @@ impl Encode for NasPduSessionEstablishmentRequest {
 
 impl Decode for NasPduSessionEstablishmentRequest {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-        let integrity_protection_maximum_data_rate = NasIntegrityProtectionMaximumDataRate::decode(buffer)?;
+        let integrity_protection_maximum_data_rate =
+            NasIntegrityProtectionMaximumDataRate::decode(buffer)?;
 
-        let mut message = Self::new(
-            integrity_protection_maximum_data_rate,
-        );
+        let mut message = Self::new(integrity_protection_maximum_data_rate);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -4692,60 +4881,70 @@ impl Decode for NasPduSessionEstablishmentRequest {
             match iei {
                 0x90 => {
                     message.pdu_session_type = Some(NasPduSessionType::decode(buffer)?);
-                },
+                }
                 0xA0 => {
                     message.ssc_mode = Some(NasSscMode::decode(buffer)?);
-                },
+                }
                 0x28 => {
                     message.fgsm_capability = Some(NasFGsmCapability::decode(buffer)?);
-                },
+                }
                 0x55 => {
                     buffer.advance(1); // Skip IEI
-                    message.maximum_number_of_supported_packet_filters = Some(NasMaximumNumberOfSupportedPacketFilters::decode(buffer)?);
-                },
+                    message.maximum_number_of_supported_packet_filters =
+                        Some(NasMaximumNumberOfSupportedPacketFilters::decode(buffer)?);
+                }
                 0xB0 => {
-                    message.always_on_pdu_session_requested = Some(NasAlwaysOnPduSessionRequested::decode(buffer)?);
-                },
+                    message.always_on_pdu_session_requested =
+                        Some(NasAlwaysOnPduSessionRequested::decode(buffer)?);
+                }
                 0x39 => {
-                    message.sm_pdu_dn_request_container = Some(NasSmPduDnRequestContainer::decode(buffer)?);
-                },
+                    message.sm_pdu_dn_request_container =
+                        Some(NasSmPduDnRequestContainer::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x66 => {
-                    message.ip_header_compression_configuration = Some(NasIpHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ip_header_compression_configuration =
+                        Some(NasIpHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x6E => {
-                    message.ds_tt_ethernet_port_mac_address = Some(NasDsTtEthernetPortMacAddress::decode(buffer)?);
-                },
+                    message.ds_tt_ethernet_port_mac_address =
+                        Some(NasDsTtEthernetPortMacAddress::decode(buffer)?);
+                }
                 0x6F => {
                     message.ue_ds_tt_residence_time = Some(NasUeDsTtResidenceTime::decode(buffer)?);
-                },
+                }
                 0x74 => {
-                    message.port_management_information_container = Some(NasPortManagementInformationContainer::decode(buffer)?);
-                },
+                    message.port_management_information_container =
+                        Some(NasPortManagementInformationContainer::decode(buffer)?);
+                }
                 0x1F => {
-                    message.ethernet_header_compression_configuration = Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ethernet_header_compression_configuration =
+                        Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x29 => {
                     message.suggested_interface_identifier = Some(NasPduAddress::decode(buffer)?);
-                },
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
                 0x70 => {
-                    message.requested_mbs_container = Some(NasRequestedMbsContainer::decode(buffer)?);
-                },
+                    message.requested_mbs_container =
+                        Some(NasRequestedMbsContainer::decode(buffer)?);
+                }
                 0x34 => {
                     message.pdu_session_pair_id = Some(NasPduSessionPairId::decode(buffer)?);
-                },
+                }
                 0x35 => {
                     message.rsn = Some(NasRsn::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -4777,7 +4976,8 @@ pub struct NasPduSessionEstablishmentAccept {
     pub atsss_container: Option<NasAtsssContainer>,
     pub control_plane_only_indication: Option<NasControlPlaneOnlyIndication>,
     pub ip_header_compression_configuration: Option<NasIpHeaderCompressionConfiguration>,
-    pub ethernet_header_compression_configuration: Option<NasEthernetHeaderCompressionConfiguration>,
+    pub ethernet_header_compression_configuration:
+        Option<NasEthernetHeaderCompressionConfiguration>,
     pub service_level_aa_container: Option<NasServiceLevelAaContainer>,
     pub received_mbs_container: Option<NasReceivedMbsContainer>,
 }
@@ -4833,7 +5033,10 @@ impl NasPduSessionEstablishmentAccept {
         self
     }
 
-    pub fn set_always_on_pdu_session_indication(mut self, value: NasAlwaysOnPduSessionIndication) -> Self {
+    pub fn set_always_on_pdu_session_indication(
+        mut self,
+        value: NasAlwaysOnPduSessionIndication,
+    ) -> Self {
         self.always_on_pdu_session_indication = Some(value);
         self
     }
@@ -4853,7 +5056,10 @@ impl NasPduSessionEstablishmentAccept {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -4878,17 +5084,26 @@ impl NasPduSessionEstablishmentAccept {
         self
     }
 
-    pub fn set_control_plane_only_indication(mut self, value: NasControlPlaneOnlyIndication) -> Self {
+    pub fn set_control_plane_only_indication(
+        mut self,
+        value: NasControlPlaneOnlyIndication,
+    ) -> Self {
         self.control_plane_only_indication = Some(value);
         self
     }
 
-    pub fn set_ip_header_compression_configuration(mut self, value: NasIpHeaderCompressionConfiguration) -> Self {
+    pub fn set_ip_header_compression_configuration(
+        mut self,
+        value: NasIpHeaderCompressionConfiguration,
+    ) -> Self {
         self.ip_header_compression_configuration = Some(value);
         self
     }
 
-    pub fn set_ethernet_header_compression_configuration(mut self, value: NasEthernetHeaderCompressionConfiguration) -> Self {
+    pub fn set_ethernet_header_compression_configuration(
+        mut self,
+        value: NasEthernetHeaderCompressionConfiguration,
+    ) -> Self {
         self.ethernet_header_compression_configuration = Some(value);
         self
     }
@@ -5027,62 +5242,72 @@ impl Decode for NasPduSessionEstablishmentAccept {
             match iei {
                 0x59 => {
                     message.fgsm_cause = Some(NasFGsmCause::decode(buffer)?);
-                },
+                }
                 0x29 => {
                     message.pdu_address = Some(NasPduAddress::decode(buffer)?);
-                },
+                }
                 0x56 => {
                     message.rq_timer_value = Some(NasGprsTimer::decode(buffer)?);
-                },
+                }
                 0x22 => {
                     message.s_nssai = Some(NasSNssai::decode(buffer)?);
-                },
+                }
                 0x80 => {
-                    message.always_on_pdu_session_indication = Some(NasAlwaysOnPduSessionIndication::decode(buffer)?);
-                },
+                    message.always_on_pdu_session_indication =
+                        Some(NasAlwaysOnPduSessionIndication::decode(buffer)?);
+                }
                 0x75 => {
-                    message.mapped_eps_bearer_contexts = Some(NasMappedEpsBearerContexts::decode(buffer)?);
-                },
+                    message.mapped_eps_bearer_contexts =
+                        Some(NasMappedEpsBearerContexts::decode(buffer)?);
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x79 => {
-                    message.authorized_qos_flow_descriptions = Some(NasQosFlowDescriptions::decode(buffer)?);
-                },
+                    message.authorized_qos_flow_descriptions =
+                        Some(NasQosFlowDescriptions::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x25 => {
                     message.dnn = Some(NasDnn::decode(buffer)?);
-                },
+                }
                 0x17 => {
-                    message.fgsm_network_feature_support = Some(NasFGsmNetworkFeatureSupport::decode(buffer)?);
-                },
+                    message.fgsm_network_feature_support =
+                        Some(NasFGsmNetworkFeatureSupport::decode(buffer)?);
+                }
                 0x18 => {
-                    message.serving_plmn_rate_control = Some(NasServingPlmnRateControl::decode(buffer)?);
-                },
+                    message.serving_plmn_rate_control =
+                        Some(NasServingPlmnRateControl::decode(buffer)?);
+                }
                 0x77 => {
                     message.atsss_container = Some(NasAtsssContainer::decode(buffer)?);
-                },
+                }
                 0xC0 => {
-                    message.control_plane_only_indication = Some(NasControlPlaneOnlyIndication::decode(buffer)?);
-                },
+                    message.control_plane_only_indication =
+                        Some(NasControlPlaneOnlyIndication::decode(buffer)?);
+                }
                 0x66 => {
-                    message.ip_header_compression_configuration = Some(NasIpHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ip_header_compression_configuration =
+                        Some(NasIpHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x1F => {
-                    message.ethernet_header_compression_configuration = Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ethernet_header_compression_configuration =
+                        Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
                 0x71 => {
                     message.received_mbs_container = Some(NasReceivedMbsContainer::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5107,9 +5332,7 @@ pub struct NasPduSessionEstablishmentReject {
 }
 
 impl NasPduSessionEstablishmentReject {
-    pub fn new(
-        fgsm_cause: NasFGsmCause,
-    ) -> Self {
+    pub fn new(fgsm_cause: NasFGsmCause) -> Self {
         Self {
             fgsm_cause,
             back_off_timer_value: None,
@@ -5137,12 +5360,18 @@ impl NasPduSessionEstablishmentReject {
         self
     }
 
-    pub fn set_fgsm_congestion_re_attempt_indicator(mut self, value: NasFGsmCongestionReAttemptIndicator) -> Self {
+    pub fn set_fgsm_congestion_re_attempt_indicator(
+        mut self,
+        value: NasFGsmCongestionReAttemptIndicator,
+    ) -> Self {
         self.fgsm_congestion_re_attempt_indicator = Some(value);
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -5204,9 +5433,7 @@ impl Decode for NasPduSessionEstablishmentReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgsm_cause = NasFGsmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgsm_cause,
-        );
+        let mut message = Self::new(fgsm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -5220,29 +5447,32 @@ impl Decode for NasPduSessionEstablishmentReject {
             match iei {
                 0x37 => {
                     message.back_off_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0xF0 => {
                     message.allowed_ssc_mode = Some(NasAllowedSscMode::decode(buffer)?);
-                },
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x61 => {
-                    message.fgsm_congestion_re_attempt_indicator = Some(NasFGsmCongestionReAttemptIndicator::decode(buffer)?);
-                },
+                    message.fgsm_congestion_re_attempt_indicator =
+                        Some(NasFGsmCongestionReAttemptIndicator::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x1D => {
                     message.re_attempt_indicator = Some(NasReAttemptIndicator::decode(buffer)?);
-                },
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
-                _ => {
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5261,16 +5491,17 @@ pub struct NasPduSessionAuthenticationCommand {
 }
 
 impl NasPduSessionAuthenticationCommand {
-    pub fn new(
-        eap_message: NasEapMessage,
-    ) -> Self {
+    pub fn new(eap_message: NasEapMessage) -> Self {
         Self {
             eap_message,
             extended_protocol_configuration_options: None,
         }
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -5292,9 +5523,7 @@ impl Decode for NasPduSessionAuthenticationCommand {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let eap_message = NasEapMessage::decode(buffer)?;
 
-        let mut message = Self::new(
-            eap_message,
-        );
+        let mut message = Self::new(eap_message);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -5307,12 +5536,13 @@ impl Decode for NasPduSessionAuthenticationCommand {
 
             match iei {
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5331,16 +5561,17 @@ pub struct NasPduSessionAuthenticationComplete {
 }
 
 impl NasPduSessionAuthenticationComplete {
-    pub fn new(
-        eap_message: NasEapMessage,
-    ) -> Self {
+    pub fn new(eap_message: NasEapMessage) -> Self {
         Self {
             eap_message,
             extended_protocol_configuration_options: None,
         }
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -5362,9 +5593,7 @@ impl Decode for NasPduSessionAuthenticationComplete {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let eap_message = NasEapMessage::decode(buffer)?;
 
-        let mut message = Self::new(
-            eap_message,
-        );
+        let mut message = Self::new(eap_message);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -5377,12 +5606,13 @@ impl Decode for NasPduSessionAuthenticationComplete {
 
             match iei {
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5401,8 +5631,7 @@ pub struct NasPduSessionAuthenticationResult {
 }
 
 impl NasPduSessionAuthenticationResult {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             eap_message: None,
             extended_protocol_configuration_options: None,
@@ -5414,7 +5643,10 @@ impl NasPduSessionAuthenticationResult {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -5438,9 +5670,7 @@ impl Encode for NasPduSessionAuthenticationResult {
 
 impl Decode for NasPduSessionAuthenticationResult {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -5454,14 +5684,15 @@ impl Decode for NasPduSessionAuthenticationResult {
             match iei {
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5477,7 +5708,8 @@ pub struct NasPduSessionModificationRequest {
     // Optional fields
     pub fgsm_capability: Option<NasFGsmCapability>,
     pub fgsm_cause: Option<NasFGsmCause>,
-    pub maximum_number_of_supported_packet_filters: Option<NasMaximumNumberOfSupportedPacketFilters>,
+    pub maximum_number_of_supported_packet_filters:
+        Option<NasMaximumNumberOfSupportedPacketFilters>,
     pub always_on_pdu_session_requested: Option<NasAlwaysOnPduSessionRequested>,
     pub integrity_protection_maximum_data_rate: Option<NasIntegrityProtectionMaximumDataRate>,
     pub requested_qos_rules: Option<NasQosRules>,
@@ -5486,14 +5718,14 @@ pub struct NasPduSessionModificationRequest {
     pub extended_protocol_configuration_options: Option<NasExtendedProtocolConfigurationOptions>,
     pub port_management_information_container: Option<NasPortManagementInformationContainer>,
     pub ip_header_compression_configuration: Option<NasHeaderCompressionConfiguration>,
-    pub ethernet_header_compression_configuration: Option<NasEthernetHeaderCompressionConfiguration>,
+    pub ethernet_header_compression_configuration:
+        Option<NasEthernetHeaderCompressionConfiguration>,
     pub requested_mbs_container: Option<NasRequestedMbsContainer>,
     pub service_level_aa_container: Option<NasServiceLevelAaContainer>,
 }
 
 impl NasPduSessionModificationRequest {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             fgsm_capability: None,
             fgsm_cause: None,
@@ -5522,17 +5754,26 @@ impl NasPduSessionModificationRequest {
         self
     }
 
-    pub fn set_maximum_number_of_supported_packet_filters(mut self, value: NasMaximumNumberOfSupportedPacketFilters) -> Self {
+    pub fn set_maximum_number_of_supported_packet_filters(
+        mut self,
+        value: NasMaximumNumberOfSupportedPacketFilters,
+    ) -> Self {
         self.maximum_number_of_supported_packet_filters = Some(value);
         self
     }
 
-    pub fn set_always_on_pdu_session_requested(mut self, value: NasAlwaysOnPduSessionRequested) -> Self {
+    pub fn set_always_on_pdu_session_requested(
+        mut self,
+        value: NasAlwaysOnPduSessionRequested,
+    ) -> Self {
         self.always_on_pdu_session_requested = Some(value);
         self
     }
 
-    pub fn set_integrity_protection_maximum_data_rate(mut self, value: NasIntegrityProtectionMaximumDataRate) -> Self {
+    pub fn set_integrity_protection_maximum_data_rate(
+        mut self,
+        value: NasIntegrityProtectionMaximumDataRate,
+    ) -> Self {
         self.integrity_protection_maximum_data_rate = Some(value);
         self
     }
@@ -5552,22 +5793,34 @@ impl NasPduSessionModificationRequest {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
 
-    pub fn set_port_management_information_container(mut self, value: NasPortManagementInformationContainer) -> Self {
+    pub fn set_port_management_information_container(
+        mut self,
+        value: NasPortManagementInformationContainer,
+    ) -> Self {
         self.port_management_information_container = Some(value);
         self
     }
 
-    pub fn set_ip_header_compression_configuration(mut self, value: NasHeaderCompressionConfiguration) -> Self {
+    pub fn set_ip_header_compression_configuration(
+        mut self,
+        value: NasHeaderCompressionConfiguration,
+    ) -> Self {
         self.ip_header_compression_configuration = Some(value);
         self
     }
 
-    pub fn set_ethernet_header_compression_configuration(mut self, value: NasEthernetHeaderCompressionConfiguration) -> Self {
+    pub fn set_ethernet_header_compression_configuration(
+        mut self,
+        value: NasEthernetHeaderCompressionConfiguration,
+    ) -> Self {
         self.ethernet_header_compression_configuration = Some(value);
         self
     }
@@ -5658,9 +5911,7 @@ impl Encode for NasPduSessionModificationRequest {
 
 impl Decode for NasPduSessionModificationRequest {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -5674,53 +5925,64 @@ impl Decode for NasPduSessionModificationRequest {
             match iei {
                 0x28 => {
                     message.fgsm_capability = Some(NasFGsmCapability::decode(buffer)?);
-                },
+                }
                 0x59 => {
                     message.fgsm_cause = Some(NasFGsmCause::decode(buffer)?);
-                },
+                }
                 0x55 => {
                     buffer.advance(1); // Skip IEI
-                    message.maximum_number_of_supported_packet_filters = Some(NasMaximumNumberOfSupportedPacketFilters::decode(buffer)?);
-                },
+                    message.maximum_number_of_supported_packet_filters =
+                        Some(NasMaximumNumberOfSupportedPacketFilters::decode(buffer)?);
+                }
                 0xB0 => {
-                    message.always_on_pdu_session_requested = Some(NasAlwaysOnPduSessionRequested::decode(buffer)?);
-                },
+                    message.always_on_pdu_session_requested =
+                        Some(NasAlwaysOnPduSessionRequested::decode(buffer)?);
+                }
                 0x13 => {
                     buffer.advance(1); // Skip IEI
-                    message.integrity_protection_maximum_data_rate = Some(NasIntegrityProtectionMaximumDataRate::decode(buffer)?);
-                },
+                    message.integrity_protection_maximum_data_rate =
+                        Some(NasIntegrityProtectionMaximumDataRate::decode(buffer)?);
+                }
                 0x7A => {
                     buffer.advance(1); // Skip IEI
                     message.requested_qos_rules = Some(NasQosRules::decode(buffer)?);
-                },
+                }
                 0x79 => {
-                    message.requested_qos_flow_descriptions = Some(NasQosFlowDescriptions::decode(buffer)?);
-                },
+                    message.requested_qos_flow_descriptions =
+                        Some(NasQosFlowDescriptions::decode(buffer)?);
+                }
                 0x75 => {
-                    message.mapped_eps_bearer_contexts = Some(NasMappedEpsBearerContexts::decode(buffer)?);
-                },
+                    message.mapped_eps_bearer_contexts =
+                        Some(NasMappedEpsBearerContexts::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x74 => {
-                    message.port_management_information_container = Some(NasPortManagementInformationContainer::decode(buffer)?);
-                },
+                    message.port_management_information_container =
+                        Some(NasPortManagementInformationContainer::decode(buffer)?);
+                }
                 0x66 => {
-                    message.ip_header_compression_configuration = Some(NasHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ip_header_compression_configuration =
+                        Some(NasHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x1F => {
-                    message.ethernet_header_compression_configuration = Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ethernet_header_compression_configuration =
+                        Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x70 => {
-                    message.requested_mbs_container = Some(NasRequestedMbsContainer::decode(buffer)?);
-                },
+                    message.requested_mbs_container =
+                        Some(NasRequestedMbsContainer::decode(buffer)?);
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
-                _ => {
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5742,9 +6004,7 @@ pub struct NasPduSessionModificationReject {
 }
 
 impl NasPduSessionModificationReject {
-    pub fn new(
-        fgsm_cause: NasFGsmCause,
-    ) -> Self {
+    pub fn new(fgsm_cause: NasFGsmCause) -> Self {
         Self {
             fgsm_cause,
             back_off_timer_value: None,
@@ -5759,12 +6019,18 @@ impl NasPduSessionModificationReject {
         self
     }
 
-    pub fn set_fgsm_congestion_re_attempt_indicator(mut self, value: NasFGsmCongestionReAttemptIndicator) -> Self {
+    pub fn set_fgsm_congestion_re_attempt_indicator(
+        mut self,
+        value: NasFGsmCongestionReAttemptIndicator,
+    ) -> Self {
         self.fgsm_congestion_re_attempt_indicator = Some(value);
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -5806,9 +6072,7 @@ impl Decode for NasPduSessionModificationReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgsm_cause = NasFGsmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgsm_cause,
-        );
+        let mut message = Self::new(fgsm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -5822,20 +6086,22 @@ impl Decode for NasPduSessionModificationReject {
             match iei {
                 0x37 => {
                     message.back_off_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x61 => {
-                    message.fgsm_congestion_re_attempt_indicator = Some(NasFGsmCongestionReAttemptIndicator::decode(buffer)?);
-                },
+                    message.fgsm_congestion_re_attempt_indicator =
+                        Some(NasFGsmCongestionReAttemptIndicator::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x1D => {
                     message.re_attempt_indicator = Some(NasReAttemptIndicator::decode(buffer)?);
-                },
-                _ => {
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -5861,14 +6127,14 @@ pub struct NasPduSessionModificationCommand {
     pub ip_header_compression_configuration: Option<NasIpHeaderCompressionConfiguration>,
     pub port_management_information_container: Option<NasPortManagementInformationContainer>,
     pub serving_plmn_rate_control: Option<NasServingPlmnRateControl>,
-    pub ethernet_header_compression_configuration: Option<NasEthernetHeaderCompressionConfiguration>,
+    pub ethernet_header_compression_configuration:
+        Option<NasEthernetHeaderCompressionConfiguration>,
     pub received_mbs_container: Option<NasReceivedMbsContainer>,
     pub service_level_aa_container: Option<NasServiceLevelAaContainer>,
 }
 
 impl NasPduSessionModificationCommand {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             fgsm_cause: None,
             session_ambr: None,
@@ -5903,7 +6169,10 @@ impl NasPduSessionModificationCommand {
         self
     }
 
-    pub fn set_always_on_pdu_session_indication(mut self, value: NasAlwaysOnPduSessionIndication) -> Self {
+    pub fn set_always_on_pdu_session_indication(
+        mut self,
+        value: NasAlwaysOnPduSessionIndication,
+    ) -> Self {
         self.always_on_pdu_session_indication = Some(value);
         self
     }
@@ -5923,7 +6192,10 @@ impl NasPduSessionModificationCommand {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -5933,12 +6205,18 @@ impl NasPduSessionModificationCommand {
         self
     }
 
-    pub fn set_ip_header_compression_configuration(mut self, value: NasIpHeaderCompressionConfiguration) -> Self {
+    pub fn set_ip_header_compression_configuration(
+        mut self,
+        value: NasIpHeaderCompressionConfiguration,
+    ) -> Self {
         self.ip_header_compression_configuration = Some(value);
         self
     }
 
-    pub fn set_port_management_information_container(mut self, value: NasPortManagementInformationContainer) -> Self {
+    pub fn set_port_management_information_container(
+        mut self,
+        value: NasPortManagementInformationContainer,
+    ) -> Self {
         self.port_management_information_container = Some(value);
         self
     }
@@ -5948,7 +6226,10 @@ impl NasPduSessionModificationCommand {
         self
     }
 
-    pub fn set_ethernet_header_compression_configuration(mut self, value: NasEthernetHeaderCompressionConfiguration) -> Self {
+    pub fn set_ethernet_header_compression_configuration(
+        mut self,
+        value: NasEthernetHeaderCompressionConfiguration,
+    ) -> Self {
         self.ethernet_header_compression_configuration = Some(value);
         self
     }
@@ -6045,9 +6326,7 @@ impl Encode for NasPduSessionModificationCommand {
 
 impl Decode for NasPduSessionModificationCommand {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6061,55 +6340,64 @@ impl Decode for NasPduSessionModificationCommand {
             match iei {
                 0x59 => {
                     message.fgsm_cause = Some(NasFGsmCause::decode(buffer)?);
-                },
+                }
                 0x2A => {
                     buffer.advance(1); // Skip IEI
                     message.session_ambr = Some(NasSessionAmbr::decode(buffer)?);
-                },
+                }
                 0x56 => {
                     message.rq_timer_value = Some(NasGprsTimer::decode(buffer)?);
-                },
+                }
                 0x80 => {
-                    message.always_on_pdu_session_indication = Some(NasAlwaysOnPduSessionIndication::decode(buffer)?);
-                },
+                    message.always_on_pdu_session_indication =
+                        Some(NasAlwaysOnPduSessionIndication::decode(buffer)?);
+                }
                 0x7A => {
                     buffer.advance(1); // Skip IEI
                     message.authorized_qos_rules = Some(NasQosRules::decode(buffer)?);
-                },
+                }
                 0x75 => {
-                    message.mapped_eps_bearer_contexts = Some(NasMappedEpsBearerContexts::decode(buffer)?);
-                },
+                    message.mapped_eps_bearer_contexts =
+                        Some(NasMappedEpsBearerContexts::decode(buffer)?);
+                }
                 0x79 => {
-                    message.authorized_qos_flow_descriptions = Some(NasQosFlowDescriptions::decode(buffer)?);
-                },
+                    message.authorized_qos_flow_descriptions =
+                        Some(NasQosFlowDescriptions::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x77 => {
                     message.atsss_container = Some(NasAtsssContainer::decode(buffer)?);
-                },
+                }
                 0x66 => {
-                    message.ip_header_compression_configuration = Some(NasIpHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ip_header_compression_configuration =
+                        Some(NasIpHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x74 => {
-                    message.port_management_information_container = Some(NasPortManagementInformationContainer::decode(buffer)?);
-                },
+                    message.port_management_information_container =
+                        Some(NasPortManagementInformationContainer::decode(buffer)?);
+                }
                 0x1E => {
-                    message.serving_plmn_rate_control = Some(NasServingPlmnRateControl::decode(buffer)?);
-                },
+                    message.serving_plmn_rate_control =
+                        Some(NasServingPlmnRateControl::decode(buffer)?);
+                }
                 0x1F => {
-                    message.ethernet_header_compression_configuration = Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
-                },
+                    message.ethernet_header_compression_configuration =
+                        Some(NasEthernetHeaderCompressionConfiguration::decode(buffer)?);
+                }
                 0x71 => {
                     message.received_mbs_container = Some(NasReceivedMbsContainer::decode(buffer)?);
-                },
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
-                _ => {
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6128,20 +6416,25 @@ pub struct NasPduSessionModificationComplete {
 }
 
 impl NasPduSessionModificationComplete {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             extended_protocol_configuration_options: None,
             port_management_information_container: None,
         }
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
 
-    pub fn set_port_management_information_container(mut self, value: NasPortManagementInformationContainer) -> Self {
+    pub fn set_port_management_information_container(
+        mut self,
+        value: NasPortManagementInformationContainer,
+    ) -> Self {
         self.port_management_information_container = Some(value);
         self
     }
@@ -6165,9 +6458,7 @@ impl Encode for NasPduSessionModificationComplete {
 
 impl Decode for NasPduSessionModificationComplete {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6180,15 +6471,17 @@ impl Decode for NasPduSessionModificationComplete {
 
             match iei {
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0x74 => {
-                    message.port_management_information_container = Some(NasPortManagementInformationContainer::decode(buffer)?);
-                },
-                _ => {
+                    message.port_management_information_container =
+                        Some(NasPortManagementInformationContainer::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6207,16 +6500,17 @@ pub struct NasPduSessionModificationCommandReject {
 }
 
 impl NasPduSessionModificationCommandReject {
-    pub fn new(
-        fgsm_cause: NasFGsmCause,
-    ) -> Self {
+    pub fn new(fgsm_cause: NasFGsmCause) -> Self {
         Self {
             fgsm_cause,
             extended_protocol_configuration_options: None,
         }
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -6238,9 +6532,7 @@ impl Decode for NasPduSessionModificationCommandReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgsm_cause = NasFGsmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgsm_cause,
-        );
+        let mut message = Self::new(fgsm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6253,12 +6545,13 @@ impl Decode for NasPduSessionModificationCommandReject {
 
             match iei {
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6277,8 +6570,7 @@ pub struct NasPduSessionReleaseRequest {
 }
 
 impl NasPduSessionReleaseRequest {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             fgsm_cause: None,
             extended_protocol_configuration_options: None,
@@ -6290,7 +6582,10 @@ impl NasPduSessionReleaseRequest {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -6314,9 +6609,7 @@ impl Encode for NasPduSessionReleaseRequest {
 
 impl Decode for NasPduSessionReleaseRequest {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6330,14 +6623,15 @@ impl Decode for NasPduSessionReleaseRequest {
             match iei {
                 0x59 => {
                     message.fgsm_cause = Some(NasFGsmCause::decode(buffer)?);
-                },
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6356,16 +6650,17 @@ pub struct NasPduSessionReleaseReject {
 }
 
 impl NasPduSessionReleaseReject {
-    pub fn new(
-        fgsm_cause: NasFGsmCause,
-    ) -> Self {
+    pub fn new(fgsm_cause: NasFGsmCause) -> Self {
         Self {
             fgsm_cause,
             extended_protocol_configuration_options: None,
         }
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -6387,9 +6682,7 @@ impl Decode for NasPduSessionReleaseReject {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgsm_cause = NasFGsmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgsm_cause,
-        );
+        let mut message = Self::new(fgsm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6402,12 +6695,13 @@ impl Decode for NasPduSessionReleaseReject {
 
             match iei {
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6431,9 +6725,7 @@ pub struct NasPduSessionReleaseCommand {
 }
 
 impl NasPduSessionReleaseCommand {
-    pub fn new(
-        fgsm_cause: NasFGsmCause,
-    ) -> Self {
+    pub fn new(fgsm_cause: NasFGsmCause) -> Self {
         Self {
             fgsm_cause,
             back_off_timer_value: None,
@@ -6455,12 +6747,18 @@ impl NasPduSessionReleaseCommand {
         self
     }
 
-    pub fn set_fgsm_congestion_re_attempt_indicator(mut self, value: NasFGsmCongestionReAttemptIndicator) -> Self {
+    pub fn set_fgsm_congestion_re_attempt_indicator(
+        mut self,
+        value: NasFGsmCongestionReAttemptIndicator,
+    ) -> Self {
         self.fgsm_congestion_re_attempt_indicator = Some(value);
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -6517,9 +6815,7 @@ impl Decode for NasPduSessionReleaseCommand {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgsm_cause = NasFGsmCause::decode(buffer)?;
 
-        let mut message = Self::new(
-            fgsm_cause,
-        );
+        let mut message = Self::new(fgsm_cause);
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6533,26 +6829,29 @@ impl Decode for NasPduSessionReleaseCommand {
             match iei {
                 0x37 => {
                     message.back_off_timer_value = Some(NasGprsTimer3::decode(buffer)?);
-                },
+                }
                 0x78 => {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
-                },
+                }
                 0x61 => {
-                    message.fgsm_congestion_re_attempt_indicator = Some(NasFGsmCongestionReAttemptIndicator::decode(buffer)?);
-                },
+                    message.fgsm_congestion_re_attempt_indicator =
+                        Some(NasFGsmCongestionReAttemptIndicator::decode(buffer)?);
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
                 0xD0 => {
                     message.access_type = Some(NasAccessType::decode(buffer)?);
-                },
+                }
                 0x72 => {
-                    message.service_level_aa_container = Some(NasServiceLevelAaContainer::decode(buffer)?);
-                },
-                _ => {
+                    message.service_level_aa_container =
+                        Some(NasServiceLevelAaContainer::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6571,8 +6870,7 @@ pub struct NasPduSessionReleaseComplete {
 }
 
 impl NasPduSessionReleaseComplete {
-    pub fn new(
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             fgsm_cause: None,
             extended_protocol_configuration_options: None,
@@ -6584,7 +6882,10 @@ impl NasPduSessionReleaseComplete {
         self
     }
 
-    pub fn set_extended_protocol_configuration_options(mut self, value: NasExtendedProtocolConfigurationOptions) -> Self {
+    pub fn set_extended_protocol_configuration_options(
+        mut self,
+        value: NasExtendedProtocolConfigurationOptions,
+    ) -> Self {
         self.extended_protocol_configuration_options = Some(value);
         self
     }
@@ -6608,9 +6909,7 @@ impl Encode for NasPduSessionReleaseComplete {
 
 impl Decode for NasPduSessionReleaseComplete {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-
-        let mut message = Self::new(
-        );
+        let mut message = Self::new();
 
         // Decode optional fields
         while buffer.has_remaining() {
@@ -6624,14 +6923,15 @@ impl Decode for NasPduSessionReleaseComplete {
             match iei {
                 0x59 => {
                     message.fgsm_cause = Some(NasFGsmCause::decode(buffer)?);
-                },
+                }
                 0x7B => {
-                    message.extended_protocol_configuration_options = Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
-                },
-                _ => {
+                    message.extended_protocol_configuration_options =
+                        Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
+                }
+                x => {
                     // Unknown IEI, skip this IE
-                    debug_assert!(false, "unknown iei!");
-                },
+                    println!("unknown iei {x}!");
+                }
             }
         }
 
@@ -6647,12 +6947,8 @@ pub struct NasFGsmStatus {
 }
 
 impl NasFGsmStatus {
-    pub fn new(
-        fgsm_cause: NasFGsmCause,
-    ) -> Self {
-        Self {
-            fgsm_cause,
-        }
+    pub fn new(fgsm_cause: NasFGsmCause) -> Self {
+        Self { fgsm_cause }
     }
 }
 
@@ -6667,10 +6963,7 @@ impl Decode for NasFGsmStatus {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
         let fgsm_cause = NasFGsmCause::decode(buffer)?;
 
-        let  message = Self::new(
-            fgsm_cause,
-        );
-
+        let message = Self::new(fgsm_cause);
 
         Ok(message)
     }
@@ -6714,12 +7007,18 @@ impl Nas5gmmMessage {
             Nas5gmmMessage::RegistrationAccept(_) => Nas5gmmMessageType::RegistrationAccept,
             Nas5gmmMessage::RegistrationComplete(_) => Nas5gmmMessageType::RegistrationComplete,
             Nas5gmmMessage::RegistrationReject(_) => Nas5gmmMessageType::RegistrationReject,
-            Nas5gmmMessage::DeregistrationRequestFromUe(_) => Nas5gmmMessageType::DeregistrationRequestFromUe,
-            Nas5gmmMessage::DeregistrationRequestToUe(_) => Nas5gmmMessageType::DeregistrationRequestToUe,
+            Nas5gmmMessage::DeregistrationRequestFromUe(_) => {
+                Nas5gmmMessageType::DeregistrationRequestFromUe
+            }
+            Nas5gmmMessage::DeregistrationRequestToUe(_) => {
+                Nas5gmmMessageType::DeregistrationRequestToUe
+            }
             Nas5gmmMessage::ServiceRequest(_) => Nas5gmmMessageType::ServiceRequest,
             Nas5gmmMessage::ServiceReject(_) => Nas5gmmMessageType::ServiceReject,
             Nas5gmmMessage::ServiceAccept(_) => Nas5gmmMessageType::ServiceAccept,
-            Nas5gmmMessage::ConfigurationUpdateCommand(_) => Nas5gmmMessageType::ConfigurationUpdateCommand,
+            Nas5gmmMessage::ConfigurationUpdateCommand(_) => {
+                Nas5gmmMessageType::ConfigurationUpdateCommand
+            }
             Nas5gmmMessage::AuthenticationRequest(_) => Nas5gmmMessageType::AuthenticationRequest,
             Nas5gmmMessage::AuthenticationResponse(_) => Nas5gmmMessageType::AuthenticationResponse,
             Nas5gmmMessage::AuthenticationReject(_) => Nas5gmmMessageType::AuthenticationReject,
@@ -6776,34 +7075,92 @@ impl TryFrom<(Nas5gmmMessageType, &mut Bytes)> for Nas5gmmMessage {
 
     fn try_from(value: (Nas5gmmMessageType, &mut Bytes)) -> Result<Self> {
         let (message_type, buffer) = value;
-        
+
         match message_type {
-            Nas5gmmMessageType::RegistrationRequest => Ok(Nas5gmmMessage::RegistrationRequest(NasRegistrationRequest::decode(buffer)?)),
-            Nas5gmmMessageType::RegistrationAccept => Ok(Nas5gmmMessage::RegistrationAccept(NasRegistrationAccept::decode(buffer)?)),
-            Nas5gmmMessageType::RegistrationComplete => Ok(Nas5gmmMessage::RegistrationComplete(NasRegistrationComplete::decode(buffer)?)),
-            Nas5gmmMessageType::RegistrationReject => Ok(Nas5gmmMessage::RegistrationReject(NasRegistrationReject::decode(buffer)?)),
-            Nas5gmmMessageType::DeregistrationRequestFromUe => Ok(Nas5gmmMessage::DeregistrationRequestFromUe(NasDeregistrationRequestFromUe::decode(buffer)?)),
-            Nas5gmmMessageType::DeregistrationRequestToUe => Ok(Nas5gmmMessage::DeregistrationRequestToUe(NasDeregistrationRequestToUe::decode(buffer)?)),
-            Nas5gmmMessageType::ServiceRequest => Ok(Nas5gmmMessage::ServiceRequest(NasServiceRequest::decode(buffer)?)),
-            Nas5gmmMessageType::ServiceReject => Ok(Nas5gmmMessage::ServiceReject(NasServiceReject::decode(buffer)?)),
-            Nas5gmmMessageType::ServiceAccept => Ok(Nas5gmmMessage::ServiceAccept(NasServiceAccept::decode(buffer)?)),
-            Nas5gmmMessageType::ConfigurationUpdateCommand => Ok(Nas5gmmMessage::ConfigurationUpdateCommand(NasConfigurationUpdateCommand::decode(buffer)?)),
-            Nas5gmmMessageType::AuthenticationRequest => Ok(Nas5gmmMessage::AuthenticationRequest(NasAuthenticationRequest::decode(buffer)?)),
-            Nas5gmmMessageType::AuthenticationResponse => Ok(Nas5gmmMessage::AuthenticationResponse(NasAuthenticationResponse::decode(buffer)?)),
-            Nas5gmmMessageType::AuthenticationReject => Ok(Nas5gmmMessage::AuthenticationReject(NasAuthenticationReject::decode(buffer)?)),
-            Nas5gmmMessageType::AuthenticationFailure => Ok(Nas5gmmMessage::AuthenticationFailure(NasAuthenticationFailure::decode(buffer)?)),
-            Nas5gmmMessageType::AuthenticationResult => Ok(Nas5gmmMessage::AuthenticationResult(NasAuthenticationResult::decode(buffer)?)),
-            Nas5gmmMessageType::IdentityRequest => Ok(Nas5gmmMessage::IdentityRequest(NasIdentityRequest::decode(buffer)?)),
-            Nas5gmmMessageType::IdentityResponse => Ok(Nas5gmmMessage::IdentityResponse(NasIdentityResponse::decode(buffer)?)),
-            Nas5gmmMessageType::SecurityModeCommand => Ok(Nas5gmmMessage::SecurityModeCommand(NasSecurityModeCommand::decode(buffer)?)),
-            Nas5gmmMessageType::SecurityModeComplete => Ok(Nas5gmmMessage::SecurityModeComplete(NasSecurityModeComplete::decode(buffer)?)),
-            Nas5gmmMessageType::SecurityModeReject => Ok(Nas5gmmMessage::SecurityModeReject(NasSecurityModeReject::decode(buffer)?)),
-            Nas5gmmMessageType::FGmmStatus => Ok(Nas5gmmMessage::FGmmStatus(NasFGmmStatus::decode(buffer)?)),
-            Nas5gmmMessageType::Notification => Ok(Nas5gmmMessage::Notification(NasNotification::decode(buffer)?)),
-            Nas5gmmMessageType::NotificationResponse => Ok(Nas5gmmMessage::NotificationResponse(NasNotificationResponse::decode(buffer)?)),
-            Nas5gmmMessageType::UlNasTransport => Ok(Nas5gmmMessage::UlNasTransport(NasUlNasTransport::decode(buffer)?)),
-            Nas5gmmMessageType::DlNasTransport => Ok(Nas5gmmMessage::DlNasTransport(NasDlNasTransport::decode(buffer)?)),
-            Nas5gmmMessageType::DeregistrationAcceptFromUe | Nas5gmmMessageType::DeregistrationAcceptToUe | Nas5gmmMessageType::ConfigurationUpdateComplete => todo!()
+            Nas5gmmMessageType::RegistrationRequest => Ok(Nas5gmmMessage::RegistrationRequest(
+                NasRegistrationRequest::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::RegistrationAccept => Ok(Nas5gmmMessage::RegistrationAccept(
+                NasRegistrationAccept::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::RegistrationComplete => Ok(Nas5gmmMessage::RegistrationComplete(
+                NasRegistrationComplete::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::RegistrationReject => Ok(Nas5gmmMessage::RegistrationReject(
+                NasRegistrationReject::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::DeregistrationRequestFromUe => {
+                Ok(Nas5gmmMessage::DeregistrationRequestFromUe(
+                    NasDeregistrationRequestFromUe::decode(buffer)?,
+                ))
+            }
+            Nas5gmmMessageType::DeregistrationRequestToUe => {
+                Ok(Nas5gmmMessage::DeregistrationRequestToUe(
+                    NasDeregistrationRequestToUe::decode(buffer)?,
+                ))
+            }
+            Nas5gmmMessageType::ServiceRequest => Ok(Nas5gmmMessage::ServiceRequest(
+                NasServiceRequest::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::ServiceReject => Ok(Nas5gmmMessage::ServiceReject(
+                NasServiceReject::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::ServiceAccept => Ok(Nas5gmmMessage::ServiceAccept(
+                NasServiceAccept::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::ConfigurationUpdateCommand => {
+                Ok(Nas5gmmMessage::ConfigurationUpdateCommand(
+                    NasConfigurationUpdateCommand::decode(buffer)?,
+                ))
+            }
+            Nas5gmmMessageType::AuthenticationRequest => Ok(Nas5gmmMessage::AuthenticationRequest(
+                NasAuthenticationRequest::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::AuthenticationResponse => Ok(
+                Nas5gmmMessage::AuthenticationResponse(NasAuthenticationResponse::decode(buffer)?),
+            ),
+            Nas5gmmMessageType::AuthenticationReject => Ok(Nas5gmmMessage::AuthenticationReject(
+                NasAuthenticationReject::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::AuthenticationFailure => Ok(Nas5gmmMessage::AuthenticationFailure(
+                NasAuthenticationFailure::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::AuthenticationResult => Ok(Nas5gmmMessage::AuthenticationResult(
+                NasAuthenticationResult::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::IdentityRequest => Ok(Nas5gmmMessage::IdentityRequest(
+                NasIdentityRequest::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::IdentityResponse => Ok(Nas5gmmMessage::IdentityResponse(
+                NasIdentityResponse::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::SecurityModeCommand => Ok(Nas5gmmMessage::SecurityModeCommand(
+                NasSecurityModeCommand::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::SecurityModeComplete => Ok(Nas5gmmMessage::SecurityModeComplete(
+                NasSecurityModeComplete::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::SecurityModeReject => Ok(Nas5gmmMessage::SecurityModeReject(
+                NasSecurityModeReject::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::FGmmStatus => {
+                Ok(Nas5gmmMessage::FGmmStatus(NasFGmmStatus::decode(buffer)?))
+            }
+            Nas5gmmMessageType::Notification => Ok(Nas5gmmMessage::Notification(
+                NasNotification::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::NotificationResponse => Ok(Nas5gmmMessage::NotificationResponse(
+                NasNotificationResponse::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::UlNasTransport => Ok(Nas5gmmMessage::UlNasTransport(
+                NasUlNasTransport::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::DlNasTransport => Ok(Nas5gmmMessage::DlNasTransport(
+                NasDlNasTransport::decode(buffer)?,
+            )),
+            Nas5gmmMessageType::DeregistrationAcceptFromUe
+            | Nas5gmmMessageType::DeregistrationAcceptToUe
+            | Nas5gmmMessageType::ConfigurationUpdateComplete => todo!(),
         }
     }
 }
@@ -6833,21 +7190,51 @@ pub enum Nas5gsmMessage {
 impl Nas5gsmMessage {
     pub fn get_message_type(&self) -> Nas5gsmMessageType {
         match self {
-            Nas5gsmMessage::PduSessionEstablishmentRequest(_) => Nas5gsmMessageType::PduSessionEstablishmentRequest,
-            Nas5gsmMessage::PduSessionEstablishmentAccept(_) => Nas5gsmMessageType::PduSessionEstablishmentAccept,
-            Nas5gsmMessage::PduSessionEstablishmentReject(_) => Nas5gsmMessageType::PduSessionEstablishmentReject,
-            Nas5gsmMessage::PduSessionAuthenticationCommand(_) => Nas5gsmMessageType::PduSessionAuthenticationCommand,
-            Nas5gsmMessage::PduSessionAuthenticationComplete(_) => Nas5gsmMessageType::PduSessionAuthenticationComplete,
-            Nas5gsmMessage::PduSessionAuthenticationResult(_) => Nas5gsmMessageType::PduSessionAuthenticationResult,
-            Nas5gsmMessage::PduSessionModificationRequest(_) => Nas5gsmMessageType::PduSessionModificationRequest,
-            Nas5gsmMessage::PduSessionModificationReject(_) => Nas5gsmMessageType::PduSessionModificationReject,
-            Nas5gsmMessage::PduSessionModificationCommand(_) => Nas5gsmMessageType::PduSessionModificationCommand,
-            Nas5gsmMessage::PduSessionModificationComplete(_) => Nas5gsmMessageType::PduSessionModificationComplete,
-            Nas5gsmMessage::PduSessionModificationCommandReject(_) => Nas5gsmMessageType::PduSessionModificationCommandReject,
-            Nas5gsmMessage::PduSessionReleaseRequest(_) => Nas5gsmMessageType::PduSessionReleaseRequest,
-            Nas5gsmMessage::PduSessionReleaseReject(_) => Nas5gsmMessageType::PduSessionReleaseReject,
-            Nas5gsmMessage::PduSessionReleaseCommand(_) => Nas5gsmMessageType::PduSessionReleaseCommand,
-            Nas5gsmMessage::PduSessionReleaseComplete(_) => Nas5gsmMessageType::PduSessionReleaseComplete,
+            Nas5gsmMessage::PduSessionEstablishmentRequest(_) => {
+                Nas5gsmMessageType::PduSessionEstablishmentRequest
+            }
+            Nas5gsmMessage::PduSessionEstablishmentAccept(_) => {
+                Nas5gsmMessageType::PduSessionEstablishmentAccept
+            }
+            Nas5gsmMessage::PduSessionEstablishmentReject(_) => {
+                Nas5gsmMessageType::PduSessionEstablishmentReject
+            }
+            Nas5gsmMessage::PduSessionAuthenticationCommand(_) => {
+                Nas5gsmMessageType::PduSessionAuthenticationCommand
+            }
+            Nas5gsmMessage::PduSessionAuthenticationComplete(_) => {
+                Nas5gsmMessageType::PduSessionAuthenticationComplete
+            }
+            Nas5gsmMessage::PduSessionAuthenticationResult(_) => {
+                Nas5gsmMessageType::PduSessionAuthenticationResult
+            }
+            Nas5gsmMessage::PduSessionModificationRequest(_) => {
+                Nas5gsmMessageType::PduSessionModificationRequest
+            }
+            Nas5gsmMessage::PduSessionModificationReject(_) => {
+                Nas5gsmMessageType::PduSessionModificationReject
+            }
+            Nas5gsmMessage::PduSessionModificationCommand(_) => {
+                Nas5gsmMessageType::PduSessionModificationCommand
+            }
+            Nas5gsmMessage::PduSessionModificationComplete(_) => {
+                Nas5gsmMessageType::PduSessionModificationComplete
+            }
+            Nas5gsmMessage::PduSessionModificationCommandReject(_) => {
+                Nas5gsmMessageType::PduSessionModificationCommandReject
+            }
+            Nas5gsmMessage::PduSessionReleaseRequest(_) => {
+                Nas5gsmMessageType::PduSessionReleaseRequest
+            }
+            Nas5gsmMessage::PduSessionReleaseReject(_) => {
+                Nas5gsmMessageType::PduSessionReleaseReject
+            }
+            Nas5gsmMessage::PduSessionReleaseCommand(_) => {
+                Nas5gsmMessageType::PduSessionReleaseCommand
+            }
+            Nas5gsmMessage::PduSessionReleaseComplete(_) => {
+                Nas5gsmMessageType::PduSessionReleaseComplete
+            }
             Nas5gsmMessage::FGsmStatus(_) => Nas5gsmMessageType::FGsmStatus,
         }
     }
@@ -6881,25 +7268,86 @@ impl TryFrom<(Nas5gsmMessageType, &mut Bytes)> for Nas5gsmMessage {
 
     fn try_from(value: (Nas5gsmMessageType, &mut Bytes)) -> Result<Self> {
         let (message_type, buffer) = value;
-        
-        match message_type {
-            Nas5gsmMessageType::PduSessionEstablishmentRequest => Ok(Nas5gsmMessage::PduSessionEstablishmentRequest(NasPduSessionEstablishmentRequest::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionEstablishmentAccept => Ok(Nas5gsmMessage::PduSessionEstablishmentAccept(NasPduSessionEstablishmentAccept::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionEstablishmentReject => Ok(Nas5gsmMessage::PduSessionEstablishmentReject(NasPduSessionEstablishmentReject::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionAuthenticationCommand => Ok(Nas5gsmMessage::PduSessionAuthenticationCommand(NasPduSessionAuthenticationCommand::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionAuthenticationComplete => Ok(Nas5gsmMessage::PduSessionAuthenticationComplete(NasPduSessionAuthenticationComplete::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionAuthenticationResult => Ok(Nas5gsmMessage::PduSessionAuthenticationResult(NasPduSessionAuthenticationResult::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionModificationRequest => Ok(Nas5gsmMessage::PduSessionModificationRequest(NasPduSessionModificationRequest::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionModificationReject => Ok(Nas5gsmMessage::PduSessionModificationReject(NasPduSessionModificationReject::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionModificationCommand => Ok(Nas5gsmMessage::PduSessionModificationCommand(NasPduSessionModificationCommand::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionModificationComplete => Ok(Nas5gsmMessage::PduSessionModificationComplete(NasPduSessionModificationComplete::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionModificationCommandReject => Ok(Nas5gsmMessage::PduSessionModificationCommandReject(NasPduSessionModificationCommandReject::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionReleaseRequest => Ok(Nas5gsmMessage::PduSessionReleaseRequest(NasPduSessionReleaseRequest::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionReleaseReject => Ok(Nas5gsmMessage::PduSessionReleaseReject(NasPduSessionReleaseReject::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionReleaseCommand => Ok(Nas5gsmMessage::PduSessionReleaseCommand(NasPduSessionReleaseCommand::decode(buffer)?)),
-            Nas5gsmMessageType::PduSessionReleaseComplete => Ok(Nas5gsmMessage::PduSessionReleaseComplete(NasPduSessionReleaseComplete::decode(buffer)?)),
-            Nas5gsmMessageType::FGsmStatus => Ok(Nas5gsmMessage::FGsmStatus(NasFGsmStatus::decode(buffer)?)),
 
+        match message_type {
+            Nas5gsmMessageType::PduSessionEstablishmentRequest => {
+                Ok(Nas5gsmMessage::PduSessionEstablishmentRequest(
+                    NasPduSessionEstablishmentRequest::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionEstablishmentAccept => {
+                Ok(Nas5gsmMessage::PduSessionEstablishmentAccept(
+                    NasPduSessionEstablishmentAccept::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionEstablishmentReject => {
+                Ok(Nas5gsmMessage::PduSessionEstablishmentReject(
+                    NasPduSessionEstablishmentReject::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionAuthenticationCommand => {
+                Ok(Nas5gsmMessage::PduSessionAuthenticationCommand(
+                    NasPduSessionAuthenticationCommand::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionAuthenticationComplete => {
+                Ok(Nas5gsmMessage::PduSessionAuthenticationComplete(
+                    NasPduSessionAuthenticationComplete::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionAuthenticationResult => {
+                Ok(Nas5gsmMessage::PduSessionAuthenticationResult(
+                    NasPduSessionAuthenticationResult::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionModificationRequest => {
+                Ok(Nas5gsmMessage::PduSessionModificationRequest(
+                    NasPduSessionModificationRequest::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionModificationReject => {
+                Ok(Nas5gsmMessage::PduSessionModificationReject(
+                    NasPduSessionModificationReject::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionModificationCommand => {
+                Ok(Nas5gsmMessage::PduSessionModificationCommand(
+                    NasPduSessionModificationCommand::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionModificationComplete => {
+                Ok(Nas5gsmMessage::PduSessionModificationComplete(
+                    NasPduSessionModificationComplete::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionModificationCommandReject => {
+                Ok(Nas5gsmMessage::PduSessionModificationCommandReject(
+                    NasPduSessionModificationCommandReject::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionReleaseRequest => {
+                Ok(Nas5gsmMessage::PduSessionReleaseRequest(
+                    NasPduSessionReleaseRequest::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionReleaseReject => {
+                Ok(Nas5gsmMessage::PduSessionReleaseReject(
+                    NasPduSessionReleaseReject::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionReleaseCommand => {
+                Ok(Nas5gsmMessage::PduSessionReleaseCommand(
+                    NasPduSessionReleaseCommand::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::PduSessionReleaseComplete => {
+                Ok(Nas5gsmMessage::PduSessionReleaseComplete(
+                    NasPduSessionReleaseComplete::decode(buffer)?,
+                ))
+            }
+            Nas5gsmMessageType::FGsmStatus => {
+                Ok(Nas5gsmMessage::FGsmStatus(NasFGsmStatus::decode(buffer)?))
+            }
         }
     }
 }
@@ -6918,7 +7366,7 @@ impl Nas5gsMessage {
         let header = Nas5gmmHeader::new(message_type);
         Nas5gsMessage::Gmm(header, message)
     }
-    
+
     /// Create a new 5GSM message
     pub fn new_5gsm(
         message_type: Nas5gsmMessageType,
@@ -6926,10 +7374,14 @@ impl Nas5gsMessage {
         pdu_session_identity: u8,
         procedure_transaction_identity: u8,
     ) -> Self {
-        let header = Nas5gsmHeader::new(message_type, pdu_session_identity, procedure_transaction_identity);
+        let header = Nas5gsmHeader::new(
+            message_type,
+            pdu_session_identity,
+            procedure_transaction_identity,
+        );
         Nas5gsMessage::Gsm(header, message)
     }
-    
+
     /// Wrap a message with security protection
     pub fn protect(
         message: Nas5gsMessage,
@@ -6942,14 +7394,14 @@ impl Nas5gsMessage {
             Nas5gsMessage::Gsm(h, _) => h.extended_protocol_discriminator,
             Nas5gsMessage::SecurityProtected(h, _) => h.extended_protocol_discriminator,
         };
-        
+
         let security_header = Nas5gsSecurityHeader {
             extended_protocol_discriminator,
             security_header_type,
             message_authentication_code,
             sequence_number,
         };
-        
+
         Nas5gsMessage::SecurityProtected(security_header, Box::new(message))
     }
 }
@@ -6960,22 +7412,22 @@ impl Encode for Nas5gsMessage {
             Nas5gsMessage::Gmm(header, message) => {
                 header.encode(buffer)?;
                 message.encode(buffer)?;
-            },
+            }
             Nas5gsMessage::Gsm(header, message) => {
                 header.encode(buffer)?;
                 message.encode(buffer)?;
-            },
+            }
             Nas5gsMessage::SecurityProtected(header, message) => {
                 header.encode(buffer)?;
-                
+
                 // For security-protected messages, we encode the inner message
                 // into a temporary buffer, then copy it to the output buffer
                 let mut inner_buffer = BytesMut::new();
                 message.encode(&mut inner_buffer)?;
                 buffer.put_slice(&inner_buffer);
-            },
+            }
         }
-        
+
         Ok(())
     }
 }
@@ -6985,10 +7437,10 @@ impl Decode for Nas5gsMessage {
         if buffer.remaining() < 1 {
             return Err(NasError::BufferTooShort);
         }
-        
+
         // Check extended protocol discriminator (first byte)
         let epd = buffer[0];
-        
+
         // Check security header type (second byte, for 5GMM)
         let security_header_type = if epd == EXTENDED_PROTOCOL_DISCRIMINATOR_5GMM {
             if buffer.remaining() < 2 {
@@ -6998,34 +7450,40 @@ impl Decode for Nas5gsMessage {
         } else {
             0 // Not relevant for 5GSM
         };
-        
+
         match epd {
             EXTENDED_PROTOCOL_DISCRIMINATOR_5GMM => {
                 // Check if it's a security-protected message
                 if security_header_type >= 0x01 && security_header_type <= 0x04 {
                     // Security-protected message
                     let security_header = Nas5gsSecurityHeader::decode(buffer)?;
-                    
+
                     // The rest of the buffer contains the plain NAS message
                     let plain_message = Nas5gsMessage::decode(buffer)?;
-                    
-                    Ok(Nas5gsMessage::SecurityProtected(security_header, Box::new(plain_message)))
+
+                    Ok(Nas5gsMessage::SecurityProtected(
+                        security_header,
+                        Box::new(plain_message),
+                    ))
                 } else {
                     // Plain 5GMM message
                     let header = Nas5gmmHeader::decode(buffer)?;
                     let message = Nas5gmmMessage::try_from((header.message_type, buffer))?;
-                    
+
                     Ok(Nas5gsMessage::Gmm(header, message))
                 }
-            },
+            }
             EXTENDED_PROTOCOL_DISCRIMINATOR_5GSM => {
                 // Plain 5GSM message
                 let header = Nas5gsmHeader::decode(buffer)?;
                 let message = Nas5gsmMessage::try_from((header.message_type, buffer))?;
-                
+
                 Ok(Nas5gsMessage::Gsm(header, message))
-            },
-            _ => Err(NasError::DecodingError(format!("Unknown Extended Protocol Discriminator: {}", epd))),
+            }
+            _ => Err(NasError::DecodingError(format!(
+                "Unknown Extended Protocol Discriminator: {}",
+                epd
+            ))),
         }
     }
 }
@@ -7034,10 +7492,10 @@ impl Decode for Nas5gsMessage {
 pub fn encode_nas_5gs_message(message: &Nas5gsMessage) -> Result<Vec<u8>> {
     // Create a buffer with enough capacity for most messages
     let mut buffer = BytesMut::with_capacity(256);
-    
+
     // Encode the message
     message.encode(&mut buffer)?;
-    
+
     // Convert to Vec<u8>
     Ok(buffer.to_vec())
 }
@@ -7047,4 +7505,3 @@ pub fn decode_nas_5gs_message(data: &[u8]) -> Result<Nas5gsMessage> {
     let mut buffer = Bytes::copy_from_slice(data);
     Nas5gsMessage::decode(&mut buffer)
 }
-
