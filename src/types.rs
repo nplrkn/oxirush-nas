@@ -6443,12 +6443,8 @@ impl Decode for NasMaximumNumberOfSupportedPacketFilters {
             println!("wanted 3");
             return Err(NasError::BufferTooShort);
         }
-        let length = 3;
-        if buffer.remaining() < length as usize {
-            println!("wanted in vec 3");
-            return Err(NasError::BufferTooShort);
-        }
-        let mut value = vec![0; length as usize];
+        buffer.advance(1);
+        let mut value = vec![0; 2usize];
         buffer.copy_to_slice(&mut value);
         Ok(Self { value })
     }

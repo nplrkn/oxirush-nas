@@ -837,8 +837,7 @@ impl Decode for NasRegistrationRequest {
                     message.requested_t3512_value = Some(NasGprsTimer3::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -1716,8 +1715,7 @@ impl Decode for NasRegistrationAccept {
                     message.nsag_information = Some(NasNsagInformation::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -1778,8 +1776,7 @@ impl Decode for NasRegistrationComplete {
                         Some(NasSorTransparentContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -2012,8 +2009,7 @@ impl Decode for NasRegistrationReject {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -2270,8 +2266,7 @@ impl Decode for NasDeregistrationRequestToUe {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -2416,8 +2411,7 @@ impl Decode for NasServiceRequest {
                     message.paging_restriction = Some(NasPagingRestriction::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -2634,8 +2628,7 @@ impl Decode for NasServiceReject {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -2825,8 +2818,7 @@ impl Decode for NasServiceAccept {
                     message.forbidden_tai_for_the_list_of_fgs_forbidden_tracking_areas_forregional_provision_of_service = Some(NasFGsTrackingAreaIdentityList::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -3424,8 +3416,7 @@ impl Decode for NasConfigurationUpdateCommand {
                     message.priority_indicator = Some(NasPriorityIndicator::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -3532,8 +3523,7 @@ impl Decode for NasAuthenticationRequest {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -3612,8 +3602,7 @@ impl Decode for NasAuthenticationResponse {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -3671,8 +3660,7 @@ impl Decode for NasAuthenticationReject {
                     message.eap_message = Some(NasEapMessage::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -3741,8 +3729,7 @@ impl Decode for NasAuthenticationFailure {
                         Some(NasAuthenticationFailureParameter::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -3811,8 +3798,7 @@ impl Decode for NasAuthenticationResult {
                     message.abba = Some(NasAbba::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -4040,8 +4026,7 @@ impl Decode for NasSecurityModeCommand {
                         Some(NasS1UeSecurityCapability::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -4131,8 +4116,7 @@ impl Decode for NasSecurityModeComplete {
                     message.non_imeisv_pei = Some(NasFGsMobileIdentity::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -4282,8 +4266,7 @@ impl Decode for NasNotificationResponse {
                     message.pdu_session_status = Some(NasPduSessionStatus::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -4466,8 +4449,7 @@ impl Decode for NasUlNasTransport {
                         Some(NasReleaseAssistanceIndication::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -4600,8 +4582,7 @@ impl Decode for NasDlNasTransport {
                     message.lower_bound_timer_value = Some(NasGprsTimer3::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -4889,7 +4870,6 @@ impl Decode for NasPduSessionEstablishmentRequest {
                     message.fgsm_capability = Some(NasFGsmCapability::decode(buffer)?);
                 }
                 0x55 => {
-                    buffer.advance(1); // Skip IEI
                     message.maximum_number_of_supported_packet_filters =
                         Some(NasMaximumNumberOfSupportedPacketFilters::decode(buffer)?);
                 }
@@ -4942,8 +4922,7 @@ impl Decode for NasPduSessionEstablishmentRequest {
                     message.rsn = Some(NasRsn::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -5305,8 +5284,7 @@ impl Decode for NasPduSessionEstablishmentAccept {
                     message.received_mbs_container = Some(NasReceivedMbsContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -5470,8 +5448,7 @@ impl Decode for NasPduSessionEstablishmentReject {
                         Some(NasServiceLevelAaContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -5540,8 +5517,7 @@ impl Decode for NasPduSessionAuthenticationCommand {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -5610,8 +5586,7 @@ impl Decode for NasPduSessionAuthenticationComplete {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -5690,8 +5665,7 @@ impl Decode for NasPduSessionAuthenticationResult {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -5980,8 +5954,7 @@ impl Decode for NasPduSessionModificationRequest {
                         Some(NasServiceLevelAaContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6099,8 +6072,7 @@ impl Decode for NasPduSessionModificationReject {
                     message.re_attempt_indicator = Some(NasReAttemptIndicator::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6395,8 +6367,7 @@ impl Decode for NasPduSessionModificationCommand {
                         Some(NasServiceLevelAaContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6479,8 +6450,7 @@ impl Decode for NasPduSessionModificationComplete {
                         Some(NasPortManagementInformationContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6549,8 +6519,7 @@ impl Decode for NasPduSessionModificationCommandReject {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6629,8 +6598,7 @@ impl Decode for NasPduSessionReleaseRequest {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6699,8 +6667,7 @@ impl Decode for NasPduSessionReleaseReject {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6849,8 +6816,7 @@ impl Decode for NasPduSessionReleaseCommand {
                         Some(NasServiceLevelAaContainer::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
@@ -6929,8 +6895,7 @@ impl Decode for NasPduSessionReleaseComplete {
                         Some(NasExtendedProtocolConfigurationOptions::decode(buffer)?);
                 }
                 x => {
-                    // Unknown IEI, skip this IE
-                    println!("unknown iei {x}!");
+                    panic!("unknown iei {x} remaining {}!", buffer.remaining());
                 }
             }
         }
