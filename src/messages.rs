@@ -7399,6 +7399,30 @@ impl Encode for Nas5gsMessage {
 
 impl Decode for Nas5gsMessage {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
+        Self::decode_inner(buffer, false)
+    }
+}
+
+/// Encode a NAS 5GS message to bytes
+pub fn encode_nas_5gs_message(message: &Nas5gsMessage) -> Result<Vec<u8>> {
+    // Create a buffer with enough capacity for most messages
+    let mut buffer = BytesMut::with_capacity(256);
+
+    // Encode the message
+    message.encode(&mut buffer)?;
+
+    // Convert to Vec<u8>
+    Ok(buffer.to_vec())
+}
+
+/// Decode a NAS 5GS message from bytes
+pub fn decode_nas_5gs_message(data: &[u8]) -> Result<Nas5gsMessage> {
+    let mut buffer = Bytes::copy_from_slice(data);
+    Nas5gsMessage::decode(&mut buffer)
+}
+
+impl Nas5gsMessage {
+    fn decode_inner(buffer: &mut Bytes, plain: bool) -> Result<Self> {
         if buffer.remaining() < 1 {
             return Err(NasError::BufferTooShort);
         }
@@ -7407,7 +7431,7 @@ impl Decode for Nas5gsMessage {
         let epd = buffer[0];
 
         // Check security header type (second byte, for 5GMM)
-        let security_header_type = if epd == EXTENDED_PROTOCOL_DISCRIMINATOR_5GMM {
+        let mut security_header_type = if epd == EXTENDED_PROTOCOL_DISCRIMINATOR_5GMM {
             if buffer.remaining() < 2 {
                 return Err(NasError::BufferTooShort);
             }
@@ -7415,6 +7439,13 @@ impl Decode for Nas5gsMessage {
         } else {
             0 // Not relevant for 5GSM
         };
+
+        // Special case code to handle an OpenAirInterface UE sim suspected bug in which the inner NAS message
+        // has a security header type of 4 but no actual security header.
+        // See test_oai_malformed_deregistration_request().
+        if plain && security_header_type != 0 {
+            security_header_type = 0;
+        }
 
         match epd {
             EXTENDED_PROTOCOL_DISCRIMINATOR_5GMM => {
@@ -7424,7 +7455,7 @@ impl Decode for Nas5gsMessage {
                     let security_header = Nas5gsSecurityHeader::decode(buffer)?;
 
                     // The rest of the buffer contains the plain NAS message
-                    let plain_message = Nas5gsMessage::decode(buffer)?;
+                    let plain_message = Nas5gsMessage::decode_inner(buffer, true)?;
 
                     Ok(Nas5gsMessage::SecurityProtected(
                         security_header,
@@ -7451,22 +7482,4 @@ impl Decode for Nas5gsMessage {
             ))),
         }
     }
-}
-
-/// Encode a NAS 5GS message to bytes
-pub fn encode_nas_5gs_message(message: &Nas5gsMessage) -> Result<Vec<u8>> {
-    // Create a buffer with enough capacity for most messages
-    let mut buffer = BytesMut::with_capacity(256);
-
-    // Encode the message
-    message.encode(&mut buffer)?;
-
-    // Convert to Vec<u8>
-    Ok(buffer.to_vec())
-}
-
-/// Decode a NAS 5GS message from bytes
-pub fn decode_nas_5gs_message(data: &[u8]) -> Result<Nas5gsMessage> {
-    let mut buffer = Bytes::copy_from_slice(data);
-    Nas5gsMessage::decode(&mut buffer)
 }

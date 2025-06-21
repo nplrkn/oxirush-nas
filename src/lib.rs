@@ -195,6 +195,17 @@ mod tests {
         assert_eq!(payload, encoded_message);
     }
 
+    // The OpenAirInterface simulated UE sends a security protected deregistration request where the inner
+    // message has security header type 0x0100 - INTEGRITY_PROTECTED_AND_CIPHERED_WITH_NEW_SECU_CTX -
+    // but no security header.
+    #[test]
+    fn test_oai_malformed_deregistration_request() {
+        let payload = BASE64_STANDARD
+            .decode("fgL43lGCA34ERRAAC/IC+JkBAIBnVi/D")
+            .unwrap();
+        decode_nas_5gs_message(&payload).unwrap();
+    }
+
     #[test]
     fn test_maximum_packet_filters_fix() {
         let payload = hex::decode("2e0101c1ffff912801005510007b00238080211001010010810600000000830600000000000a00000d00000500001100001000").unwrap();
