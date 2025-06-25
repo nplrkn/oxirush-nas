@@ -6743,7 +6743,10 @@ impl NasPduSessionReleaseCommand {
 
 impl Encode for NasPduSessionReleaseCommand {
     fn encode(&self, buffer: &mut BytesMut) -> Result<()> {
-        self.fgsm_cause.encode(buffer)?;
+        // This is a V, not a TV, so we can't use the normal encode function.
+        //self.fgsm_cause.encode(buffer)?;
+        buffer.put_u8(self.fgsm_cause.value);
+
         if let Some(ref value) = self.back_off_timer_value {
             let mut ie = value.clone();
             ie.type_field = 0x37;
@@ -6780,7 +6783,12 @@ impl Encode for NasPduSessionReleaseCommand {
 
 impl Decode for NasPduSessionReleaseCommand {
     fn decode(buffer: &mut Bytes) -> Result<Self> {
-        let fgsm_cause = NasFGsmCause::decode(buffer)?;
+        // This is a V, not a TV, so we can't use the normal decode function.
+        //let fgsm_cause = NasFGsmCause::decode(buffer)?;
+        if buffer.remaining() < 1 {
+            return Err(NasError::BufferTooShort);
+        }
+        let fgsm_cause = NasFGsmCause::new(buffer.get_u8());
 
         let mut message = Self::new(fgsm_cause);
 
