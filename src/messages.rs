@@ -7133,7 +7133,9 @@ impl TryFrom<(Nas5gmmMessageType, &mut Bytes)> for Nas5gmmMessage {
             )),
             Nas5gmmMessageType::DeregistrationAcceptFromUe
             | Nas5gmmMessageType::DeregistrationAcceptToUe
-            | Nas5gmmMessageType::ConfigurationUpdateComplete => todo!(),
+            | Nas5gmmMessageType::ConfigurationUpdateComplete => {
+                Err(NasError::UnknownMessageType(message_type as u8))
+            }
         }
     }
 }
