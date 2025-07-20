@@ -126,12 +126,11 @@ mod tests {
         assert_eq!(payload, encoded_message);
     }
 
-    // #[test]
-    // fn test_configuration_update_complete() {
-    //     let payload = BASE64_STANDARD.decode("fgBV").unwrap();
-
-    //     decode_nas_5gs_message(&payload).err().unwrap();
-    // }
+    #[test]
+    fn test_configuration_update_complete() {
+        let payload = BASE64_STANDARD.decode("fgBV").unwrap();
+        decode_nas_5gs_message(&payload).unwrap();
+    }
 
     #[test]
     fn test_pdu_session_establishment_accept() {

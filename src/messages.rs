@@ -3425,6 +3425,21 @@ impl Decode for NasConfigurationUpdateCommand {
     }
 }
 
+/// CONFIGURATION UPDATE COMMAND Message
+#[derive(Debug, Clone, PartialEq)]
+pub struct NasConfigurationUpdateComplete;
+
+impl Encode for NasConfigurationUpdateComplete {
+    fn encode(&self, _buffer: &mut BytesMut) -> Result<()> {
+        Ok(())
+    }
+}
+impl Decode for NasConfigurationUpdateComplete {
+    fn decode(_buffer: &mut Bytes) -> Result<Self> {
+        Ok(Self)
+    }
+}
+
 /// AUTHENTICATION REQUEST Message
 #[derive(Debug, Clone, PartialEq)]
 pub struct NasAuthenticationRequest {
@@ -6955,6 +6970,7 @@ pub enum Nas5gmmMessage {
     ServiceReject(NasServiceReject),
     ServiceAccept(NasServiceAccept),
     ConfigurationUpdateCommand(NasConfigurationUpdateCommand),
+    ConfigurationUpdateComplete(NasConfigurationUpdateComplete),
     AuthenticationRequest(NasAuthenticationRequest),
     AuthenticationResponse(NasAuthenticationResponse),
     AuthenticationReject(NasAuthenticationReject),
@@ -6992,6 +7008,9 @@ impl Nas5gmmMessage {
             Nas5gmmMessage::ConfigurationUpdateCommand(_) => {
                 Nas5gmmMessageType::ConfigurationUpdateCommand
             }
+            Nas5gmmMessage::ConfigurationUpdateComplete(_) => {
+                Nas5gmmMessageType::ConfigurationUpdateComplete
+            }
             Nas5gmmMessage::AuthenticationRequest(_) => Nas5gmmMessageType::AuthenticationRequest,
             Nas5gmmMessage::AuthenticationResponse(_) => Nas5gmmMessageType::AuthenticationResponse,
             Nas5gmmMessage::AuthenticationReject(_) => Nas5gmmMessageType::AuthenticationReject,
@@ -7024,6 +7043,7 @@ impl Encode for Nas5gmmMessage {
             Nas5gmmMessage::ServiceReject(msg) => msg.encode(buffer),
             Nas5gmmMessage::ServiceAccept(msg) => msg.encode(buffer),
             Nas5gmmMessage::ConfigurationUpdateCommand(msg) => msg.encode(buffer),
+            Nas5gmmMessage::ConfigurationUpdateComplete(msg) => msg.encode(buffer),
             Nas5gmmMessage::AuthenticationRequest(msg) => msg.encode(buffer),
             Nas5gmmMessage::AuthenticationResponse(msg) => msg.encode(buffer),
             Nas5gmmMessage::AuthenticationReject(msg) => msg.encode(buffer),
@@ -7086,6 +7106,11 @@ impl TryFrom<(Nas5gmmMessageType, &mut Bytes)> for Nas5gmmMessage {
                     NasConfigurationUpdateCommand::decode(buffer)?,
                 ))
             }
+            Nas5gmmMessageType::ConfigurationUpdateComplete => {
+                Ok(Nas5gmmMessage::ConfigurationUpdateComplete(
+                    NasConfigurationUpdateComplete::decode(buffer)?,
+                ))
+            }
             Nas5gmmMessageType::AuthenticationRequest => Ok(Nas5gmmMessage::AuthenticationRequest(
                 NasAuthenticationRequest::decode(buffer)?,
             )),
@@ -7132,8 +7157,7 @@ impl TryFrom<(Nas5gmmMessageType, &mut Bytes)> for Nas5gmmMessage {
                 NasDlNasTransport::decode(buffer)?,
             )),
             Nas5gmmMessageType::DeregistrationAcceptFromUe
-            | Nas5gmmMessageType::DeregistrationAcceptToUe
-            | Nas5gmmMessageType::ConfigurationUpdateComplete => {
+            | Nas5gmmMessageType::DeregistrationAcceptToUe => {
                 Err(NasError::UnknownMessageType(message_type as u8))
             }
         }
