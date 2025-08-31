@@ -2275,6 +2275,14 @@ impl Decode for NasDeregistrationRequestToUe {
     }
 }
 
+/// DEREGISTRATION ACCEPT FROM UE Message
+#[derive(Debug, Clone, PartialEq)]
+pub struct NasDeregistrationAcceptFromUe;
+
+/// DEREGISTRATION ACCEPT TO UE Message
+#[derive(Debug, Clone, PartialEq)]
+pub struct NasDeregistrationAcceptToUe;
+
 /// SERVICE REQUEST Message
 #[derive(Debug, Clone, PartialEq)]
 pub struct NasServiceRequest {
@@ -6966,6 +6974,8 @@ pub enum Nas5gmmMessage {
     RegistrationReject(NasRegistrationReject),
     DeregistrationRequestFromUe(NasDeregistrationRequestFromUe),
     DeregistrationRequestToUe(NasDeregistrationRequestToUe),
+    DeregistrationAcceptFromUe(NasDeregistrationAcceptFromUe),
+    DeregistrationAcceptToUe(NasDeregistrationAcceptToUe),
     ServiceRequest(NasServiceRequest),
     ServiceReject(NasServiceReject),
     ServiceAccept(NasServiceAccept),
@@ -6999,8 +7009,14 @@ impl Nas5gmmMessage {
             Nas5gmmMessage::DeregistrationRequestFromUe(_) => {
                 Nas5gmmMessageType::DeregistrationRequestFromUe
             }
+            Nas5gmmMessage::DeregistrationAcceptFromUe(_) => {
+                Nas5gmmMessageType::DeregistrationAcceptFromUe
+            }
             Nas5gmmMessage::DeregistrationRequestToUe(_) => {
                 Nas5gmmMessageType::DeregistrationRequestToUe
+            }
+            Nas5gmmMessage::DeregistrationAcceptToUe(_) => {
+                Nas5gmmMessageType::DeregistrationAcceptToUe
             }
             Nas5gmmMessage::ServiceRequest(_) => Nas5gmmMessageType::ServiceRequest,
             Nas5gmmMessage::ServiceReject(_) => Nas5gmmMessageType::ServiceReject,
@@ -7039,6 +7055,8 @@ impl Encode for Nas5gmmMessage {
             Nas5gmmMessage::RegistrationReject(msg) => msg.encode(buffer),
             Nas5gmmMessage::DeregistrationRequestFromUe(msg) => msg.encode(buffer),
             Nas5gmmMessage::DeregistrationRequestToUe(msg) => msg.encode(buffer),
+            Nas5gmmMessage::DeregistrationAcceptFromUe(_msg) => Ok(()),
+            Nas5gmmMessage::DeregistrationAcceptToUe(_msg) => Ok(()),
             Nas5gmmMessage::ServiceRequest(msg) => msg.encode(buffer),
             Nas5gmmMessage::ServiceReject(msg) => msg.encode(buffer),
             Nas5gmmMessage::ServiceAccept(msg) => msg.encode(buffer),
@@ -7092,6 +7110,12 @@ impl TryFrom<(Nas5gmmMessageType, &mut Bytes)> for Nas5gmmMessage {
                     NasDeregistrationRequestToUe::decode(buffer)?,
                 ))
             }
+            Nas5gmmMessageType::DeregistrationAcceptFromUe => Ok(
+                Nas5gmmMessage::DeregistrationAcceptFromUe(NasDeregistrationAcceptFromUe),
+            ),
+            Nas5gmmMessageType::DeregistrationAcceptToUe => Ok(
+                Nas5gmmMessage::DeregistrationAcceptToUe(NasDeregistrationAcceptToUe),
+            ),
             Nas5gmmMessageType::ServiceRequest => Ok(Nas5gmmMessage::ServiceRequest(
                 NasServiceRequest::decode(buffer)?,
             )),
@@ -7156,10 +7180,6 @@ impl TryFrom<(Nas5gmmMessageType, &mut Bytes)> for Nas5gmmMessage {
             Nas5gmmMessageType::DlNasTransport => Ok(Nas5gmmMessage::DlNasTransport(
                 NasDlNasTransport::decode(buffer)?,
             )),
-            Nas5gmmMessageType::DeregistrationAcceptFromUe
-            | Nas5gmmMessageType::DeregistrationAcceptToUe => {
-                Err(NasError::UnknownMessageType(message_type as u8))
-            }
         }
     }
 }
